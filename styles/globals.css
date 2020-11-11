@@ -1,0 +1,114 @@
+@font-face {
+  font-family: 'Moderat';
+  src: url('../fonts/Moderat-Light.eot');
+  src: local('Moderat Light'), local('Moderat-Light'),
+      url('../fonts/Moderat-Light.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Moderat-Light.woff2') format('woff2'),
+      url('../fonts/Moderat-Light.woff') format('woff'),
+      url('../fonts/Moderat-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Moderat';
+  src: url('../fonts/Moderat-Thin.eot');
+  src: local('Moderat Thin'), local('Moderat-Thin'),
+      url('../fonts/Moderat-Thin.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Moderat-Thin.woff2') format('woff2'),
+      url('../fonts/Moderat-Thin.woff') format('woff'),
+      url('../fonts/Moderat-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Moderat';
+  src: url('../fonts/Moderat-Bold.eot');
+  src: local('Moderat Bold'), local('Moderat-Bold'),
+      url('../fonts/Moderat-Bold.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Moderat-Bold.woff2') format('woff2'),
+      url('../fonts/Moderat-Bold.woff') format('woff'),
+      url('../fonts/Moderat-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Moderat';
+  src: url('../fonts/Moderat-Regular.eot');
+  src: local('Moderat Regular'), local('Moderat-Regular'),
+      url('../fonts/Moderat-Regular.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Moderat-Regular.woff2') format('woff2'),
+      url('../fonts/Moderat-Regular.woff') format('woff'),
+      url('../fonts/Moderat-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html, body {
+  color: #fff;
+  font-family: 'Moderat', sans-serif;
+  letter-spacing: 1.9px;
+  margin: 0px;
+  padding: 0px;
+  height: 100%;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+#modal {
+  background:#2a2a2f;
+  z-index: 1;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  width: 80%;
+  height: 80%;
+  box-shadow: 0 5px 10px 2px rgba(10, 31, 49, 1);
+  overflow: auto;
+  overscroll-behavior: contain; /* Prevent SCROLL-CHAINING to parent elements. */
+  animation-name: fade-in;
+  animation-duration: .5s;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0%;
+  }
+  to {
+    opacity: 100%;
+  }
+}
+
+#modal button {
+  z-index: 9999;
+}
+
+#__next {
+  height: 100%;
+}
+
+@media all and (max-width: 1050px) {
+  .welcomeHeader h1 {
+    font-size: 3em;
+  }
+
+  #blogList {
+    animation: slide-sm 0.5s forwards;
+  }
+
+  .welcomeHeader h2 {
+    font-size: 2.4em;
+  }
+
+  #modal {
+    width: 100%;
+    height: 100%;
+  }
+}
