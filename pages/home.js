@@ -3,7 +3,7 @@ import {createUseStyles} from 'react-jss'
 import ListItem from "../components/ui/list/listItem";
 import { homeData } from "../data/home";
 import AboutMe from "../components/aboutMe";
-import { CSSTransition } from 'react-transition-group';
+import SliderComponent from "../components/sliderComponent";
 
 const tabletBreak = '@media (max-width: 1250px)';
 const mobileBreak = '@media (max-width: 720px)';
@@ -49,60 +49,29 @@ const useStyles = createUseStyles({
       color: "#fff"
     }
   },
-  slideUp: {
-    display: "flex",
-    position: "absolute",
-    width: "100vw",
-    height: "100vh",
-    top: "0",
-    left: "0"
-  },
-  entering: {
-    maxHeight: '0px',
-    overflow: 'hidden'
-  },
-  entered: {
-    overflow: 'hidden',
-    maxHeight: '2100vh',
-    backgroundColor: "black",
-    transition: 'max-height 1.5s cubic-bezier(0.77,0,0.175,1)',
-  },
-  exiting: {
-    maxHeight: '2100vh',
-  },
-  exited: {
-    overflow: 'hidden',
-    maxHeight: '0px',
-    transition: 'max-height 1.5s cubic-bezier(0.77,0,0.175,1)'
-  },
 })
 
-const components = {
+const pages = {
   aboutMe: AboutMe
 };
 
 const Home = () => {
   const classes = useStyles();
   let [page, setPage] = useState(null);
+  const [show, setShow] = useState(false);
 
-  const show = page => {
-    const SpecificPage = components[page];
-    return <SpecificPage />;
-  } 
+  function onSetShow(page) {
+    setShow(true);
+    setPage(page);
+  }
 
   return (
     <main className={classes.container}>
       <div className={classes.left}><span className={classes.span}>Greg Miller</span></div>
       <ol className={classes.list}>
-        {homeData.map((o, index) => <ListItem key={index} {...o} onClick={() => setPage(o.page)} />)}
+        {homeData.map((o, index) => <ListItem key={index} {...o} onClick={() => onSetShow(o.page)} />)}
       </ol>
-      <CSSTransition in={page !== null} timeout={0}>
-        {state => (
-          <div className={`${classes.slideUp} ${classes[state]}`}>
-            {page !== null && show(page)}
-          </div>
-        )}
-      </CSSTransition>
+      <SliderComponent setPage={setPage} setShow={setShow} show={show} page={page} pages={pages} />
     </main>
   )
 }
