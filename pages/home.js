@@ -2,23 +2,31 @@ import React, { useState } from "react";
 import {createUseStyles} from 'react-jss'
 import ListItem from "../components/ui/list/listItem";
 import { homeData } from "../data/home";
-import AboutMe from "../components/aboutMe";
+import MyStory from "../components/myStory";
+import Contact from "../components/contact";
 import SliderComponent from "../components/sliderComponent";
+import { FaLinkedinIn } from 'react-icons/fa';
+import { AiFillGithub } from "react-icons/ai"
 
 const tabletBreak = '@media (max-width: 1250px)';
 const mobileBreak = '@media (max-width: 720px)';
 
 const useStyles = createUseStyles({
   container: {
-    display: 'grid',
-    gridTemplateColumns: "1fr 4fr",
     height: '100%',
     backgroundColor: "#171717",
+    overflow: "auto",
+    display: "flex",
+    flexFlow: "column nowrap",
+    justifyContent: "space-between"
+  },
+  content: {
+    display: 'grid',
+    gridTemplateColumns: "1fr 4fr",
     padding: "150px",
     paddingBottom: "0px",
     paddingRight: "0px",
     boxSizing: "border-box",
-    overflow: "auto",
     [tabletBreak]: {
       gridTemplateColumns: "1fr",
       padding: "20px",
@@ -49,11 +57,35 @@ const useStyles = createUseStyles({
       color: "#fff"
     }
   },
+  socials: {
+    display: "flex",
+    flexFlow: "row nowrap",
+    width: "min-content",
+    margin: "0 auto",
+    backgroundColor: "#1b242f",
+    padding: "0px 20px",
+    paddingTop: "10px",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  socialIcon: {
+    padding: "10px",
+    cursor: "pointer"
+  }
 })
 
 const pages = {
-  aboutMe: AboutMe
+  myStory: MyStory,
+  contact: Contact
 };
+
+const Icon = ({ classes, href, children }) => {
+  return (
+    <a href={href} target="_blank" style={{color: "#fff"}}>
+      <div className={classes.socialIcon}>{children}</div>
+    </a>
+  )
+}
 
 const Home = () => {
   const classes = useStyles();
@@ -67,10 +99,23 @@ const Home = () => {
 
   return (
     <main className={classes.container}>
-      <div className={classes.left}><span className={classes.span}>Greg Miller</span></div>
-      <ol className={classes.list}>
-        {homeData.map((o, index) => <ListItem key={index} {...o} onClick={() => onSetShow(o.page)} />)}
-      </ol>
+
+      <div className={classes.content}>
+        <div className={classes.left}><span className={classes.span}>Greg Miller</span></div>
+        <ol className={classes.list}>
+          {homeData.map((o, index) => <ListItem key={index} {...o} onClick={() => onSetShow(o.page)} />)}
+        </ol>
+      </div>
+
+      <div className={classes.socials}>
+        <Icon classes={classes} href={"https://www.linkedin.com/in/gregpmillr/"}>
+          <FaLinkedinIn size={"2em"} />
+        </Icon>
+        <Icon classes={classes} href={"https://github.com/truescotian?tab=repositories"}>
+        <AiFillGithub size={"2em"} />
+      </Icon>
+      </div>
+
       <SliderComponent setPage={setPage} setShow={setShow} show={show} page={page} pages={pages} />
     </main>
   )

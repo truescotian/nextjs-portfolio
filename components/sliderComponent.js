@@ -3,33 +3,30 @@ import { createUseStyles } from 'react-jss'
 import { CSSTransition } from 'react-transition-group';
 
 const useStyles = createUseStyles({
-  container: {
-    display: "block",
-    width: "100%",
-    marginTop: "30px"
-  },
-  exit: {
-    margin: "auto auto",
-    marginTop: "40px",
-    height: "min-content",
-    width: "min-content",
-    textAlign:"center",
-    fontSize: "50px",
-    transform: "rotate(45deg)",
-    fontWeight: "200",
-    cursor: "pointer",
-  },
   slideUp: {
+    display: "flex",
+    flexFlow: "column nowrap",
     position: "absolute",
     top: "0",
     left: "0",
-    backgroundColor: "#262a33",
+    backgroundColor: "#23272f",
     overflow: 'auto',
     height: "100vh",
     width: "100vw",
     transformOrigin: "top",
     transition: "transform .5s ease",
     transform: "scaleY(0)",
+  },
+  exit: {
+    marginTop: "20px",
+    marginLeft: "auto",
+    marginRight: "20px",
+    height: "min-content",
+    width: "min-content",
+    fontSize: "50px",
+    transform: "rotate(45deg)",
+    fontWeight: "200",
+    cursor: "pointer",
   },
   enterActive: {
     transform: "scaleY(1)",

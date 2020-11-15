@@ -1,15 +1,15 @@
 export const homeData = [
   {
     num: "01 -",
-    page: "blog",
-    title: "Blog.",
-    body: "Lessons learned throughout projects I've worked on. Topics range from networking to evolutionary neural networks with gaming applications."
+    page: "myStory",
+    title: "My Story.",
+    body: "Learn more about where I've come from, my education, and what I'm planning for my future."
   },
   {
     num: "02 -",
-    page: "aboutMe",
-    title: "About Me.",
-    body: "Learn more about where I've come from, my education, and what I'm planning for my future."
+    page: "blog",
+    title: "Blog.",
+    body: "Lessons learned throughout projects I've worked on. Topics range from binary to VR game development."
   },
   {
     num: "03 -",
