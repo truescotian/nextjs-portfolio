@@ -7,6 +7,7 @@ import Contact from "../components/contact";
 import SliderComponent from "../components/sliderComponent";
 import { FaLinkedinIn } from 'react-icons/fa';
 import { AiFillGithub } from "react-icons/ai"
+import Blog from "../components/blog";
 
 const tabletBreak = '@media (max-width: 1250px)';
 const mobileBreak = '@media (max-width: 720px)';
@@ -76,7 +77,8 @@ const useStyles = createUseStyles({
 
 const pages = {
   myStory: MyStory,
-  contact: Contact
+  contact: Contact,
+  blog: Blog
 };
 
 const Icon = ({ classes, href, children }) => {

@@ -26,7 +26,7 @@ const useStyles = createUseStyles({
     fontSize: "50px",
     transform: "rotate(45deg)",
     fontWeight: "200",
-    cursor: "pointer",
+    cursor: "pointer"
   },
   enterActive: {
     transform: "scaleY(1)",
@@ -54,9 +54,9 @@ export default function SliderComponent({ setPage, setShow, show, page, pages })
         timeout={500} 
         unmountOnExit
         classNames={{
-        enterActive: classes.enterActive,
-        enterDone: classes.enterDone,
-        exitActive: classes.exitActive
+          enterActive: classes.enterActive,
+          enterDone: classes.enterDone,
+          exitActive: classes.exitActive
         }}
         onExited={() => setPage(null) }>
         <div className={classes.slideUp}>
