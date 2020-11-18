@@ -3,7 +3,8 @@ export const homeData = [
     num: "01 -",
     page: "myStory",
     title: "My Story.",
-    body: "Learn more about where I've come from, my education, and what I'm planning for my future."
+    body: "Learn more about where I've come from, my education, and what I'm planning for my future.",
+    backgroundImage: "IMG_6041.jpg"
   },
   {
     num: "02 -",
@@ -21,6 +22,7 @@ export const homeData = [
     num: "04 -",
     page: "contact",
     title: "Contact.",
-    body: "Want to meet up for a coffee or have a call? Shoot me a message!"
+    body: "Want to meet up for a coffee or have a call? Shoot me a message!",
+    backgroundColor: "#000"
   },
 ]

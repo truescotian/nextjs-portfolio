@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createUseStyles } from 'react-jss'
 import { CSSTransition } from 'react-transition-group';
+import { homeData } from "../data/home";
 
 const useStyles = createUseStyles({
   slideUp: {
@@ -15,7 +16,7 @@ const useStyles = createUseStyles({
     width: "100vw",
     transformOrigin: "top",
     transition: "transform .5s ease",
-    transform: "scaleY(0)",
+    transform: "scaleY(0)"
   },
   exit: {
     marginTop: "20px",
@@ -37,16 +38,36 @@ const useStyles = createUseStyles({
   exitActive: {
     transform: "scaleY(0)",
   },
+  fs: {
+    minHeight: "100%",
+  }
 })
 
 export default function SliderComponent({ setPage, setShow, show, page, pages }) {
   const classes = useStyles()
+  const [styles, setStyles] = useState({});
 
   const renderPage = page => {
-    if (!page) return <></>;
     const SpecificPage = pages[page];
     return <SpecificPage />;
   } 
+
+  useEffect(() => {
+    const d = homeData.find((o) => o.page === page);
+    let tempStyles = {};
+    if (d?.backgroundImage) {
+      tempStyles = {
+        background: `url(/${d.backgroundImage})`,
+        backgroundSize: "cover",
+        boxShadow: "inset 0 0 0 2000px rgba(0, 0, 0, 0.89)"
+      }
+    }
+    if (d?.backgroundColor) {
+      tempStyles = {...tempStyles, backgroundColor: d.backgroundColor}
+    }
+    setStyles(tempStyles)
+  },[page])
+
 
   return (
     <CSSTransition 
@@ -59,7 +80,7 @@ export default function SliderComponent({ setPage, setShow, show, page, pages })
           exitActive: classes.exitActive
         }}
         onExited={() => setPage(null) }>
-        <div className={classes.slideUp}>
+        <div className={`${classes.slideUp} ${classes.fs}`} style={{...styles}}>
           <div className={classes.exit} onClick={() => setShow(false)}>+</div>
           {renderPage(page)}
         </div>
