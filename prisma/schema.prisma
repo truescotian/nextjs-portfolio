@@ -18,8 +18,7 @@ model Post {
   published     Boolean @default(false)
   author        User @relation(fields: [authorId], references: [id])
   authorId      Int
-  category      Category @relation(fields: [categoryId], references: [id])
-  categoryId    Int
+  topics        Topic[]
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @default(now()) @map(name: "updated_at")
 }
@@ -39,7 +38,6 @@ model Category {
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @default(now()) @map(name: "updated_at")
   title         String?
-  posts         Post[]
   topics        Topic[]
 }
 
@@ -48,6 +46,7 @@ model Topic {
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @default(now()) @map(name: "updated_at")
   title         String?
+  posts         Post[]
   category      Category @relation(fields: [categoryId], references: [id])
   categoryId    Int
 }

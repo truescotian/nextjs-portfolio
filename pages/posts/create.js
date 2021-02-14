@@ -10,9 +10,27 @@ class App extends React.Component {
     this.setState({ content });
   }
 
-  onSubmit = e => {
+  onSubmit = async e => {
     e.preventDefault();
-    localStorage.setItem("content", this.state.content)
+
+    try {
+      const body = {
+        title: "some title",
+        subTitle: "some sub title",
+        content: this.state.content,
+        published: true,
+        authorId: 1,
+      }
+      const res = await fetch(`http://localhost:3000/api/posts/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      const data = await res.json()
+      console.debug(data)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   componentDidMount() {

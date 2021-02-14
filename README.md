@@ -34,5 +34,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ### Run Prisma Studio
 npx prisma studio
 
+### Run migrations
+npx prisma migrate dev --name init --preview-feature
+
 ### Update migrations
 npx prisma db push --preview-feature
+
+### Seed
+npx prisma db seed --preview-feature

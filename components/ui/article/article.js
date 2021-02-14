@@ -1,5 +1,6 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
+import Link from 'next/link'
 
 const useStyles = createUseStyles({
   article: {
@@ -9,12 +10,15 @@ const useStyles = createUseStyles({
     fontWeight: "500"
   },
   h1: {
+    padding: "20px 0px",
     fontSize: "32px",
-    color: "rgb(36, 42, 49)",
     fontWeight: "500",
     letterSpacing: "normal",
     borderBottom: "2px solid rgb(230, 236, 241)",
-    padding: "40px 0px"
+    "& a": {
+      color: "rgb(36, 42, 49)",
+      textDecoration: "none"
+    }
   },
   h2: {
     color: "rgb(66, 179, 244)",
@@ -26,10 +30,23 @@ const useStyles = createUseStyles({
 
 const Article = ({ post }) => {
   const classes = useStyles()
+
+  const onDelete = async () => {
+    await fetch(`http://localhost:3000/api/posts/${post.id}`, {
+      method: 'DELETE',
+    })
+  }
+  
   return (
     <article className={classes.article}>
-      <h1 className={classes.h1}>{post.title}</h1>
+      <h1 className={classes.h1}>
+        <Link href={`/posts/${post.id}`}>
+          <a>{post.title}</a>
+        </Link>
+      </h1>
       <h2 className={classes.h2}>{post.subTitle}</h2>
+
+      <input type="button" onClick={onDelete} value="Delete" />
     </article>
   )
 }

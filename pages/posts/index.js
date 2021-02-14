@@ -23,7 +23,15 @@ const useStyles = createUseStyles({
   },
   asideRight: {
     justifySelf: "stretch"
-  }
+  },
+  h1: {
+    fontSize: "32px",
+    color: "rgb(36, 42, 49)",
+    fontWeight: "500",
+    letterSpacing: "normal",
+    padding: "0px 88px",
+    fontFamily: "Roboto",
+  },
 })
 
 const Posts = (props) => {
@@ -33,18 +41,12 @@ const Posts = (props) => {
       <header className={classes.header}></header>
       <div className={classes.container}>
         <Sidebar>
-          {props.categories.map(c => {
-            return (
-            <Section key={c.id} category={c} />
-          )}
-          )}
+          {props.categories.map(c => <Section key={c.id} category={c} /> )}
         </Sidebar>
-        {props.posts.map(f => (
-          <Article key={f.id} post={f} />
-        ))}
-        <aside className={classes.asideRight}>
-          Right Side
-        </aside>
+        <div>
+          <h1 className={classes.h1}>Most Recent:</h1>
+          {props.posts.map(f => <Article key={f.id} post={f} /> )}
+        </div>
       </div>
     </>
   )
@@ -56,6 +58,9 @@ const Posts = (props) => {
 export async function getStaticProps() {
   const posts = await prisma.post.findMany({
     where: { published: true },
+    orderBy: {
+      createdAt: "desc"
+    },
     include: {
       author: {
         select: { name: true },
