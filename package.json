@@ -8,6 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@prisma/client": "^2.16.1",
+    "@tinymce/tinymce-react": "^3.10.1",
     "next": "10.0.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
@@ -15,6 +17,12 @@
     "react-icons": "^3.11.0",
     "react-jss": "^10.4.0",
     "react-transition-group": "^4.4.1",
+    "superjson": "^1.6.2",
     "uuid": "^8.3.1"
+  },
+  "devDependencies": {
+    "@prisma/cli": "^2.16.1",
+    "babel-plugin-superjson-next": "^0.2.1",
+    "prisma": "2.16.1"
   }
 }
