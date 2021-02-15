@@ -1,6 +1,7 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const useStyles = createUseStyles({
   article: {
@@ -30,11 +31,19 @@ const useStyles = createUseStyles({
 
 const Article = ({ post }) => {
   const classes = useStyles()
+  const router = useRouter()
 
   const onDelete = async () => {
     await fetch(`http://localhost:3000/api/posts/${post.id}`, {
       method: 'DELETE',
     })
+      .then(() => {
+        router.push(`http://localhost:3000/posts`)
+      })
+  }
+  
+  function createMarkup () {
+    return { __html: post.content }
   }
   
   return (
@@ -47,6 +56,9 @@ const Article = ({ post }) => {
       <h2 className={classes.h2}>{post.subTitle}</h2>
 
       <input type="button" onClick={onDelete} value="Delete" />
+
+      <div style={{ color: "black !important" }} dangerouslySetInnerHTML={createMarkup()} />
+
     </article>
   )
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
+import TopicListItem from "./topicListItem";
 
 const useStyles = createUseStyles({
   container: {
@@ -46,7 +47,7 @@ const Section = ({ category }) => {
         {title}
       </span>
       {topics && topics.map(topic => (
-        <span key={topic.id} className={classes.header}>{topic.title}</span>
+        <TopicListItem key={topic.id} topic={topic} />
       ))}
     </div>
   )

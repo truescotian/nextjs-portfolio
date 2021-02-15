@@ -20,9 +20,6 @@ const useStyles = createUseStyles({
     gridTemplateRows: "1fr",
     gridTemplateColumns: "1fr 1fr 1fr",
     color: "#000"
-  },
-  asideRight: {
-    justifySelf: "stretch"
   }
 })
 
@@ -33,18 +30,9 @@ const Post = (props) => {
       <header className={classes.header}></header>
       <div className={classes.container}>
         <Sidebar>
-          {props.categories.map(c => {
-            return (
-            <Section key={c.id} category={c} />
-          )}
-          )}
+          {props.categories.map(c => <Section key={c.id} category={c} /> )}
         </Sidebar>
-        {props.post && 
-          <Article post={props.post} />
-        }
-        <aside className={classes.asideRight}>
-          Right Side
-        </aside>
+        {props.post && <Article post={props.post} />}
       </div>
     </>
   )
@@ -64,7 +52,6 @@ export async function getStaticPaths() {
     fallback: false
   }
 }
-
 
 // This function gets called at build time on server-side.
 // It won't be called on client-side, so you can even do

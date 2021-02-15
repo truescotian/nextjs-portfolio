@@ -1,23 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import { useRouter } from 'next/router'
 
-class App extends React.Component {
-  state = {
-    content: '',
+
+const Create = () => {
+  const [title, setTitle] = useState("");
+  const [subTitle, setSubTitle] = useState("");
+  const [content, setContent] = useState("");
+  const router = useRouter();
+  
+  const handleContent = (content, editor) => {
+    setContent(content);
   }
 
-  handleEditorChange = (content, editor) => {
-    this.setState({ content });
+  function createMarkup () {
+    return { __html: content }
   }
 
-  onSubmit = async e => {
+  const onSubmit = async e => {
     e.preventDefault();
-
+    
     try {
       const body = {
-        title: "some title",
-        subTitle: "some sub title",
-        content: this.state.content,
+        title: title,
+        subTitle: subTitle,
+        content: content,
         published: true,
         authorId: 1,
       }
@@ -27,49 +34,45 @@ class App extends React.Component {
         body: JSON.stringify(body),
       })
       const data = await res.json()
-      console.debug(data)
+      router.push(`http://localhost:3000/posts/${data.id}`)
     } catch (error) {
       console.error(error)
     }
   }
 
-  componentDidMount() {
-    const content = localStorage.getItem("content")
-    this.setState({ content })
-  }
+  return (
+    <>
+      <p>Title</p>
+      <input type="text" onChange={e => setTitle(e.target.value)} value={title} /> <br />
 
-  createMarkup = () => {
-    return { __html: this.state.content }
-  }
+      <p>Sub Title</p>
+      <input type="text" onChange={e => setSubTitle(e.target.value)} value={subTitle} />
 
-  render() {
-    return (
-      <>
-        <div style={{ color: "black" }} dangerouslySetInnerHTML={this.createMarkup()} />
-        <Editor
-          value={this.state.content}
-          apiKey='9c25oo520sw89ieq80brjufk62corkqblol4420sn808a1i0'
-          initialValue="<p>This is the initial content of the editor</p>"
-          init={{
-            height: 500,
-            menubar: false,
-            plugins: [
-              'advlist autolink lists link image charmap print preview anchor',
-              'searchreplace visualblocks code fullscreen',
-              'insertdatetime media table paste code help wordcount'
-            ],
-            toolbar:
-              'undo redo | formatselect | bold italic backcolor | \
-              alignleft aligncenter alignright alignjustify | \
-              bullist numlist outdent indent | removeformat | help'
-          }}
-          onEditorChange={this.handleEditorChange}
-        />
+      <div style={{ color: "black !important" }} dangerouslySetInnerHTML={createMarkup()} />
 
-        <input type="button" onClick={this.onSubmit} value="submit" />
-      </>
-    );
-  }
+      <Editor
+        value={content}
+        apiKey='9c25oo520sw89ieq80brjufk62corkqblol4420sn808a1i0'
+        initialValue="<p>This is the initial content of the editor</p>"
+        init={{
+          height: 500,
+          menubar: false,
+          plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code help wordcount'
+          ],
+          toolbar:
+            'undo redo | formatselect | bold italic backcolor | \
+            alignleft aligncenter alignright alignjustify | \
+            bullist numlist outdent indent | removeformat | help'
+        }}
+        onEditorChange={handleContent}
+      />
+
+      <input type="button" onClick={onSubmit} value="submit" />
+    </>
+  );
 }
 
-export default App;
+export default Create;

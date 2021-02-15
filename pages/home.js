@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {createUseStyles} from 'react-jss'
 import ListItem from "../components/ui/list/listItem";
 import { homeData } from "../data/home";
-import MyStory from "../components/myStory";
 import Contact from "../components/contact";
 import SliderComponent from "../components/sliderComponent";
 import { FaLinkedinIn } from 'react-icons/fa';
@@ -76,7 +75,6 @@ const useStyles = createUseStyles({
 })
 
 const pages = {
-  myStory: MyStory,
   contact: Contact,
   blog: Blog
 };

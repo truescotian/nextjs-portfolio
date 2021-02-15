@@ -4,6 +4,7 @@ import Article from "../../components/ui/article/article";
 import Sidebar from "../../components/ui/article/sidebar/sidebar";
 import Section from "../../components/ui/article/sidebar/section";
 import prisma from "../../lib/prisma";
+import { useRouter } from 'next/router'
 
 const useStyles = createUseStyles({
   header: {
@@ -34,8 +35,16 @@ const useStyles = createUseStyles({
   },
 })
 
+
+
 const Posts = (props) => {
   const classes = useStyles()
+  const router = useRouter()
+
+  const onCreate = () => {
+    router.push("http://localhost:3000/posts/create");
+  }
+  
   return (
     <>
       <header className={classes.header}></header>
@@ -45,6 +54,7 @@ const Posts = (props) => {
         </Sidebar>
         <div>
           <h1 className={classes.h1}>Most Recent:</h1>
+          <input type="button" onClick={onCreate} value="Create Post" />
           {props.posts.map(f => <Article key={f.id} post={f} /> )}
         </div>
       </div>
@@ -52,10 +62,24 @@ const Posts = (props) => {
   )
 }
 
-// This function gets called at build time on server-side.
-// It won't be called on client-side, so you can even do
-// direct database queries. See the "Technical details" section.
-export async function getStaticProps() {
+export async function getServerSideProps({ query }) {
+  if (query?.topic) {
+    const test = await prisma.post.findMany({
+      select: {
+        topics: {
+          where: {
+            id: parseInt(query.topic, 10)
+          },
+          select: {
+            id: true
+          }
+        }
+      }
+    })
+    console.debug(test[0].topics)
+  }
+
+
   const posts = await prisma.post.findMany({
     where: { published: true },
     orderBy: {
@@ -76,6 +100,5 @@ export async function getStaticProps() {
   })
   return { props: { posts, categories } }
 }
-
 
 export default Posts;
