@@ -19,7 +19,7 @@
     "react-jss": "^10.4.0",
     "react-transition-group": "^4.4.1",
     "superjson": "^1.6.2",
-    "uuid": "^8.3.1"
+    "uuid": "^8.3.1",
     "babel-plugin-superjson-next": "^0.2.1",
   },
   "devDependencies": {
