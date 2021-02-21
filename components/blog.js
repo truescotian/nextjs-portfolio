@@ -96,7 +96,36 @@ const useStyles = createUseStyles({
     color: "#fff",
     fontWeight: "500",
     backgroundColor: "#131313",
-    cursor: "pointer"
+    cursor: "pointer",
+    transition: "opacity 1s ease, transform 1s ease",
+  },
+  btnEnter: {
+    opacity: "0",
+    transform: "translateY(-50px)"
+  },
+  btnEnterActive: {
+    opacity: "1",
+    transform: "translateY(0px)",
+  },
+  btnExit: {
+    transform: "translateY(0px)",
+    opacity: "1"
+  },
+  btnExitActive: {
+    transform: "translateY(-20px)",
+    opacity: "0.2",
+  },
+  btnExitDone: {
+    transform: "translateY(-50px)",
+    opactiy: "0"
+  },
+  btnAppear: {
+    transform: "translateY(-50px)",
+    opacity: "0"
+  },
+  btnAppearActive: {
+    transform: "translateY(0px)",
+    opacity: "1",
   }
 })
 
@@ -111,11 +140,6 @@ export default function blog() {
     { id: uuidv4(), title: "Thing"},
   ])
 
-  const [tags, setTags] = useState([
-    "thing",
-    "thing"
-  ])
-
   return (
     <div className={classes.container}>
 
@@ -124,7 +148,22 @@ export default function blog() {
 
         <p className={classes.asideDescription}>Browse through my selection of engineering articles.</p>
 
-        <button className={classes.filterButton}>All articles about Engineering -></button>
+        <CSSTransition 
+          in={true} 
+          timeout={300} 
+          unmountOnExit
+          classNames={{
+            enter: classes.btnEnter,
+            enterActive: classes.btnEnterActive,
+            exit: classes.btnExit,
+            exitActive: classes.btnExitActive,
+            exitDone: classes.btnExitDone,
+            appear: classes.btnAppear,
+            appearActive: classes.btnAppearActive,
+          }}
+          appear>
+          <button className={classes.filterButton}>All articles about Engineering -></button>
+        </CSSTransition>
       </div>
 
       <div className={classes.blogList}>
@@ -133,7 +172,7 @@ export default function blog() {
             <CSSTransition
               key={id}
               in={true} 
-              timeout={300}
+              timeout={0}
               unmountOnExit
               classNames={{
                 enter: classes.enterActive,
