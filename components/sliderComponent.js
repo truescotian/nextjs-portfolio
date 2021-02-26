@@ -43,14 +43,14 @@ const useStyles = createUseStyles({
   }
 })
 
-export default function SliderComponent({ setPage, setShow, show, page, pages }) {
+export default function SliderComponent({ setPage, setShow, show, page, pages, ...rest }) {
   const classes = useStyles()
   const [styles, setStyles] = useState({});
 
   const renderPage = page => {
     if (!page) return null;
     const SpecificPage = pages[page];
-    return <SpecificPage />;
+    return <SpecificPage {...rest} />;
   } 
 
   useEffect(() => {

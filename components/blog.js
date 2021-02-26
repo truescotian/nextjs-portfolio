@@ -1,10 +1,9 @@
-import React, { useState } from "react"
+import React from "react"
 import { createUseStyles } from "react-jss";
 import { 
   CSSTransition, 
   TransitionGroup 
 } from 'react-transition-group';
-import { v4 as uuidv4} from 'uuid';
 
 const useStyles = createUseStyles({
   container: {
@@ -28,6 +27,7 @@ const useStyles = createUseStyles({
     flexFlow: "column nowrap",
     justifyContent: "flex-start",
     alignItems: "flex-start",
+    transition: "opacity 1s ease, transform 1s ease",
   },
   asideTitle: {
     textAlign: "center",
@@ -38,7 +38,8 @@ const useStyles = createUseStyles({
     margin: "0px",
   },
   asideDescription: {
-    letterSpacing: "0.4px"
+    letterSpacing: "0.4px",
+    color: "#fff"
   },
   hr: {
     width: "100%",
@@ -56,8 +57,8 @@ const useStyles = createUseStyles({
     minHeight: "100px",
     borderLeft: "1px solid #ffffff4d",
     color: "#fff",
-    transform: "translateX(-10%)",
-    transition: "opacity 1s ease, transform 1s ease, background-color 0.5s ease",
+    transform: "translateX(10%)",
+    transition: "opacity 1s ease, transform 1s ease",
     opacity: "0",
     marginBottom: "40px"
   },
@@ -81,116 +82,119 @@ const useStyles = createUseStyles({
     opacity: "1",
   },
   exitActive: {
-    transform: "translateX(-10%)",
+    transform: "translateX(10%)",
     opacity: "0",
   },
   filterButton: {
-    color: "#fff",
-    backgroundColor: "#000",
     width: "auto",
     textAlign: "center",
-    backgroundColor: "#000",
     border: "0px",
     padding: "10px 20px",
     borderRadius: "5px",
     color: "#fff",
     fontWeight: "500",
-    backgroundColor: "#131313",
     cursor: "pointer",
-    transition: "opacity 1s ease, transform 1s ease",
+    background: "linear-gradient(to left, #131313 50%, #fff 50%)",
+    backgroundSize: "200% 100%",
+    backgroundPosition: "right bottom",
+    transition: "all 0.5s ease",
+    "&:hover": {
+      color: "#526693",
+      backgroundPosition: "left bottom"
+    }
   },
   btnEnter: {
     opacity: "0",
-    transform: "translateY(-50px)"
+    transform: "translateX(-50px)"
   },
   btnEnterActive: {
     opacity: "1",
-    transform: "translateY(0px)",
+    transform: "translateX(0px)",
   },
   btnExit: {
-    transform: "translateY(0px)",
+    transform: "translateX(0px)",
     opacity: "1"
   },
   btnExitActive: {
-    transform: "translateY(-20px)",
+    transform: "translateX(-10px)",
     opacity: "0.2",
   },
   btnExitDone: {
-    transform: "translateY(-50px)",
+    transform: "translateX(-25px)",
     opactiy: "0"
   },
   btnAppear: {
-    transform: "translateY(-50px)",
+    transform: "translateX(-25px)",
     opacity: "0"
   },
   btnAppearActive: {
-    transform: "translateY(0px)",
+    transform: "translateX(0px)",
     opacity: "1",
   }
 })
 
-export default function blog() {
-  const classes = useStyles()
-  const [items, setItems] = useState([
-    { id: uuidv4(), title: "Thing"},
-    { id: uuidv4(), title: "Thing"},
-    { id: uuidv4(), title: "Thing"},
-    { id: uuidv4(), title: "Thing"},
-    { id: uuidv4(), title: "Thing"},
-    { id: uuidv4(), title: "Thing"},
-  ])
+const Blog = ({ categories }) => {
+  const classes = useStyles();
 
   return (
     <div className={classes.container}>
 
-      <div className={classes.aside}>
-        <p className={classes.asideTitle}>Engineering</p>
+      <TransitionGroup component={null}>
+        {categories.map(({ id, title, topics }) => (
+            <>
+              <CSSTransition 
+                in={true} 
+                unmountOnExit
+                classNames={{
+                  enter: classes.btnEnter,
+                  enterActive: classes.btnEnterActive,
+                  exit: classes.btnExit,
+                  exitActive: classes.btnExitActive,
+                  exitDone: classes.btnExitDone,
+                  appear: classes.btnAppear,
+                  appearActive: classes.btnAppearActive,
+                }}
+                appear
+              >
+                <div className={classes.aside}>
+                  <p className={classes.asideTitle}>{title}</p>
+                  <p className={classes.asideDescription}>Browse through my selection of {title} articles.</p>
+                  <button className={classes.filterButton}>All articles about {title} -></button>
+                </div>
+              </CSSTransition>
 
-        <p className={classes.asideDescription}>Browse through my selection of engineering articles.</p>
-
-        <CSSTransition 
-          in={true} 
-          timeout={300} 
-          unmountOnExit
-          classNames={{
-            enter: classes.btnEnter,
-            enterActive: classes.btnEnterActive,
-            exit: classes.btnExit,
-            exitActive: classes.btnExitActive,
-            exitDone: classes.btnExitDone,
-            appear: classes.btnAppear,
-            appearActive: classes.btnAppearActive,
-          }}
-          appear>
-          <button className={classes.filterButton}>All articles about Engineering -></button>
-        </CSSTransition>
-      </div>
-
-      <div className={classes.blogList}>
-        <TransitionGroup component={null}>
-          {items.map(({ id, title }) => (
-            <CSSTransition
-              key={id}
-              in={true} 
-              timeout={0}
-              unmountOnExit
-              classNames={{
-                enter: classes.enterActive,
-                enterDone: classes.enterDone,
-                exit: classes.exitActive
-              }}
-              appear
-            >
-              <div className={classes.blogItem}>
-                <h1 className={classes.h1}>Please welcome Chris Wong and Kirsten Lambertsen to our Ecosystem Team</h1>
-                <p className={classes.p}>
-                  This is the description of a blog post.
-                </p>
+              <div className={classes.blogList}>
+                <TransitionGroup component={null}>
+                  {topics.map(({ id, posts }) => (
+                    <>
+                      {posts.map(({ id, title, subTitle }) => (
+                        <CSSTransition
+                          key={id}
+                          in={true} 
+                          timeout={0}
+                          unmountOnExit
+                          classNames={{
+                            enter: classes.enterActive,
+                            enterDone: classes.enterDone,
+                            exit: classes.exitActive
+                          }}
+                          appear
+                        >
+                          <div className={classes.blogItem}>
+                            <h1 className={classes.h1}>{title}</h1>
+                            <p className={classes.p}>{subTitle}</p>
+                          </div>
+                        </CSSTransition>
+                      ))}
+                    </>
+                  ))}
+                </TransitionGroup>
               </div>
-          </CSSTransition>
-          ))}
-        </TransitionGroup>
-      </div>
+            </>
+        ))}
+      </TransitionGroup>
     </div>
   );
 }
+
+export default Blog;

@@ -7,6 +7,7 @@ import SliderComponent from "../components/sliderComponent";
 import { FaLinkedinIn } from 'react-icons/fa';
 import { AiFillGithub } from "react-icons/ai"
 import Blog from "../components/blog";
+import prisma from "../lib/prisma";
 
 const tabletBreak = '@media (max-width: 1250px)';
 const mobileBreak = '@media (max-width: 720px)';
@@ -87,7 +88,7 @@ const Icon = ({ classes, href, children }) => {
   )
 }
 
-const Home = () => {
+const Home = (props) => {
   const classes = useStyles();
   let [page, setPage] = useState(null);
   const [show, setShow] = useState(false);
@@ -116,9 +117,32 @@ const Home = () => {
       </Icon>
       </div>
 
-      <SliderComponent setPage={setPage} setShow={setShow} show={show} page={page} pages={pages} />
+      <SliderComponent setPage={setPage} setShow={setShow} show={show} page={page} pages={pages} {...props} />
     </main>
   )
+}
+
+export async function getServerSideProps({ query }) {
+  const categories = await prisma.category.findMany({
+    include: {
+      topics: {
+        include: {
+          posts: {
+            where: { published: true },
+            orderBy: {
+              createdAt: "desc"
+            },
+            include: {
+              author: {
+                select: { name: true },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  return { props: { categories } }
 }
 
 export default Home;

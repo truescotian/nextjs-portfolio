@@ -35,8 +35,6 @@ const useStyles = createUseStyles({
   },
 })
 
-
-
 const Posts = (props) => {
   const classes = useStyles()
   const router = useRouter()
@@ -63,23 +61,6 @@ const Posts = (props) => {
 }
 
 export async function getServerSideProps({ query }) {
-  if (query?.topic) {
-    const test = await prisma.post.findMany({
-      select: {
-        topics: {
-          where: {
-            id: parseInt(query.topic, 10)
-          },
-          select: {
-            id: true
-          }
-        }
-      }
-    })
-    console.debug(test[0].topics)
-  }
-
-
   const posts = await prisma.post.findMany({
     where: { published: true },
     orderBy: {
