@@ -167,7 +167,7 @@ const Blog = ({ categories }) => {
                 <TransitionGroup component={null}>
                   {topics.map(({ id, posts }) => (
                     <>
-                      {posts.map(({ id, title, subTitle }) => (
+                      {posts.map(({ postId, post }) => post ? (
                         <CSSTransition
                           key={id}
                           in={true} 
@@ -181,11 +181,11 @@ const Blog = ({ categories }) => {
                           appear
                         >
                           <div className={classes.blogItem}>
-                            <h1 className={classes.h1}>{title}</h1>
-                            <p className={classes.p}>{subTitle}</p>
+                            <h1 className={classes.h1}>{post.title}</h1>
+                            <p className={classes.p}>{post.subTitle}</p>
                           </div>
                         </CSSTransition>
-                      ))}
+                      ): null)}
                     </>
                   ))}
                 </TransitionGroup>

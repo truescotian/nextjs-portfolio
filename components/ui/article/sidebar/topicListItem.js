@@ -28,7 +28,6 @@ const TopicListItem = ({ topic }) => {
   const router = useRouter();
 
   const onClick = () => {
-    console.debug(router)
     router.push(`${router.asPath}?topic=${topic.id}`)
   }
 

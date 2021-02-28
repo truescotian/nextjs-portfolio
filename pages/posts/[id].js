@@ -18,7 +18,7 @@ const useStyles = createUseStyles({
     height: "calc(100% - 80px)",
     display: "grid",
     gridTemplateRows: "1fr",
-    gridTemplateColumns: "1fr 1fr 1fr",
+    gridTemplateColumns: "1fr 3fr 1fr",
     color: "#000"
   }
 })

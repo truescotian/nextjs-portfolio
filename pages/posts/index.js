@@ -1,12 +1,17 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
-import Article from "../../components/ui/article/article";
 import Sidebar from "../../components/ui/article/sidebar/sidebar";
 import Section from "../../components/ui/article/sidebar/section";
 import prisma from "../../lib/prisma";
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 const useStyles = createUseStyles({
+  article: {
+    justifySelf: "stretch",
+    fontFamily: "Roboto",
+    fontWeight: "500",
+  },
   header: {
     height: "80px",
     width: "100%",
@@ -19,20 +24,43 @@ const useStyles = createUseStyles({
     height: "calc(100% - 80px)",
     display: "grid",
     gridTemplateRows: "1fr",
-    gridTemplateColumns: "1fr 1fr 1fr",
+    gridTemplateColumns: "1fr 3fr 1fr",
     color: "#000"
   },
   asideRight: {
     justifySelf: "stretch"
   },
-  h1: {
+  articlesContainer: {
+    padding: "0px 88px"
+  },
+  mostRecent: {
+    padding: "20px 0px",
     fontSize: "32px",
-    color: "rgb(36, 42, 49)",
     fontWeight: "500",
     letterSpacing: "normal",
-    padding: "0px 88px",
     fontFamily: "Roboto",
   },
+  h1: {
+    marginTop:"40px",
+    marginBottom:"30px",
+    padding: "40px 0px",
+    paddingBottom: "0px",
+    fontSize: "32px",
+    fontWeight: "500",
+    letterSpacing: "normal",
+    borderTop: "2px solid rgb(230, 236, 241)",
+    fontFamily: "Roboto",
+    "& a": {
+      color: "rgb(36, 42, 49)",
+      textDecoration: "none"
+    }
+  },
+  h2: {
+    color: "rgb(66, 179, 244)",
+    fontWeight: "500",
+    letterSpacing: "0.3px",
+    fontSize: "16px",
+  }
 })
 
 const Posts = (props) => {
@@ -50,10 +78,19 @@ const Posts = (props) => {
         <Sidebar>
           {props.categories.map(c => <Section key={c.id} category={c} /> )}
         </Sidebar>
-        <div>
-          <h1 className={classes.h1}>Most Recent:</h1>
+        <div className={classes.articlesContainer}>
           <input type="button" onClick={onCreate} value="Create Post" />
-          {props.posts.map(f => <Article key={f.id} post={f} /> )}
+          <h1 className={classes.mostRecent}>Most Recent:</h1>
+          {props.posts.map(f => (
+            <article key={f.id} className={classes.article}>
+              <h1 className={classes.h1}>
+                <Link href={`/posts/${f.id}`}>
+                  <a>{f.title}</a>
+                </Link>
+              </h1>
+              <h2 className={classes.h2}>{f.subTitle}</h2>
+            </article>
+          ) )}
         </div>
       </div>
     </>

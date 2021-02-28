@@ -128,16 +128,8 @@ export async function getServerSideProps({ query }) {
       topics: {
         include: {
           posts: {
-            where: { published: true },
-            orderBy: {
-              createdAt: "desc"
-            },
-            include: {
-              author: {
-                select: { name: true },
-              },
-            },
-          },
+            include: { post: true}
+          }
         },
       },
     },
