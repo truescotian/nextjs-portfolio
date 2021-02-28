@@ -45,3 +45,6 @@ npx prisma db push --preview-feature
 
 ### Seed
 npx prisma db seed --preview-feature
+
+### After changes made to schema
+npx prisma generate
