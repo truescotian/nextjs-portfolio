@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createUseStyles } from "react-jss";
 import { useRouter } from 'next/router'
 
@@ -32,13 +32,22 @@ const useStyles = createUseStyles({
 const Article = ({ post }) => {
   const classes = useStyles()
   const router = useRouter()
+  const [loading, setLoading] = useState(false);
 
   const onDelete = async () => {
+    if (loading) return;
+
+    setLoading(true);
+
     await fetch(`http://localhost:3000/api/posts/${post.id}`, {
       method: 'DELETE',
     })
       .then(() => {
         router.push(`http://localhost:3000/posts`)
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
       })
   }
   
@@ -50,7 +59,7 @@ const Article = ({ post }) => {
     <article className={classes.article}>
       <h1 className={classes.h1}>
         {post.title}
-        <input type="button" className={classes.delete} onClick={onDelete} value="Delete" />
+        <input type="button" className={classes.delete} onClick={onDelete} value={`${loading ? "Deleting..." : "Delete"}`} />
       </h1>
       <h2 className={classes.h2}>{post.subTitle}</h2>
 

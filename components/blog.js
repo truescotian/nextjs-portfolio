@@ -4,12 +4,16 @@ import {
   CSSTransition, 
   TransitionGroup 
 } from 'react-transition-group';
+import { useRouter } from 'next/router'
 
 const useStyles = createUseStyles({
   container: {
     display: "flex",
-    flexFlow: "row wrap",
-    margin: "0 auto"
+    flexFlow: "column wrap",
+    margin: "0 auto",
+    "& > div:not(:first-child)": {
+      borderTop: "1px solid grey",
+    }
   },
   blogList: {
     gridColumn: "3",
@@ -130,18 +134,27 @@ const useStyles = createUseStyles({
   btnAppearActive: {
     transform: "translateX(0px)",
     opacity: "1",
+  },
+  categoryContainer: {
+    display: "flex",
+    flexFlow: "row nowrap",
   }
 })
 
 const Blog = ({ categories }) => {
   const classes = useStyles();
+  const router = useRouter()
+
+  function onClickPost(id) {
+    router.push(`/posts/${id}`);
+  }
 
   return (
     <div className={classes.container}>
 
       <TransitionGroup component={null}>
         {categories.map(({ id, title, topics }) => (
-            <>
+            <div key={id} className={classes.categoryContainer}>
               <CSSTransition 
                 in={true} 
                 unmountOnExit
@@ -166,10 +179,10 @@ const Blog = ({ categories }) => {
               <div className={classes.blogList}>
                 <TransitionGroup component={null}>
                   {topics.map(({ id, posts }) => (
-                    <>
+                    <React.Fragment key={id}>
                       {posts.map(({ postId, post }) => post ? (
                         <CSSTransition
-                          key={id}
+                          key={postId}
                           in={true} 
                           timeout={0}
                           unmountOnExit
@@ -180,17 +193,17 @@ const Blog = ({ categories }) => {
                           }}
                           appear
                         >
-                          <div className={classes.blogItem}>
+                          <div className={classes.blogItem} onClick={() => onClickPost(postId)}>
                             <h1 className={classes.h1}>{post.title}</h1>
                             <p className={classes.p}>{post.subTitle}</p>
                           </div>
                         </CSSTransition>
                       ): null)}
-                    </>
+                    </React.Fragment>
                   ))}
                 </TransitionGroup>
               </div>
-            </>
+            </div>
         ))}
       </TransitionGroup>
     </div>

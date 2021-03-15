@@ -4,6 +4,8 @@ import Article from "../../components/ui/article/article";
 import Sidebar from "../../components/ui/article/sidebar/sidebar";
 import Section from "../../components/ui/article/sidebar/section";
 import prisma from "../../lib/prisma";
+import { useRouter } from 'next/router';
+import { revalidateTimeout } from "../../utils/utils";
 
 const useStyles = createUseStyles({
   header: {
@@ -23,16 +25,19 @@ const useStyles = createUseStyles({
   }
 })
 
-const Post = (props) => {
-  const classes = useStyles()
+const Post = ({ categories, post }) => {
+  const classes = useStyles();
+  const router = useRouter();
+
+  if (router.isFallback) return <p>Loading</p>
   return (
     <>
       <header className={classes.header}></header>
       <div className={classes.container}>
         <Sidebar>
-          {props.categories.map(c => <Section key={c.id} category={c} /> )}
+          {categories.map(c => <Section key={c.id} category={c} /> )}
         </Sidebar>
-        {props.post && <Article post={props.post} />}
+        {post && <Article post={post} />}
       </div>
     </>
   )
@@ -42,15 +47,13 @@ export async function getStaticPaths() {
   const posts = await prisma.post.findMany({
     select: { id: true}
   })
-  let paths = []
-  for (const post of posts) {
-    paths.push({params: { id: post.id.toString() }});
-  }
 
-  return {
-    paths,
-    fallback: false
-  }
+  const paths = posts.map((post) => ({
+    params: { id: post.id.toString() }
+  }))
+
+
+  return { paths, fallback: true }
 }
 
 // This function gets called at build time on server-side.
@@ -67,7 +70,7 @@ export async function getStaticProps({ params }) {
       },
     },
   })
-  return { props: { post, categories } }
+  return { props: { post, categories }, revalidate: revalidateTimeout }
 }
 
 

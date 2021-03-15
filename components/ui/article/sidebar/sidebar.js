@@ -1,5 +1,7 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
+import useCategories from "../../../../hooks/useCategories";
+import Section from "./section";
 
 const useStyles = createUseStyles({
   sidebar: {
@@ -15,15 +17,19 @@ const useStyles = createUseStyles({
     marginTop: "32px",
     paddingLeft: "24px",
   },
-})
+});
 
-const Sidebar = ({ children }) => {
+const Sidebar = () => {
   const classes = useStyles()
+  const { categories, isLoading, isError } = useCategories();
+
+  if (isError) return "An error has occured.";
+  if (isLoading) return "Loading...";
 
   return (
     <aside className={classes.sidebar}>
       <div className={classes.content}>
-        {children}
+        {categories.map(c => <Section key={c.id} category={c} /> )}
       </div>
     </aside>
   )

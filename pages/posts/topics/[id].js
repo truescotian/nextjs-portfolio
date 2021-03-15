@@ -1,8 +1,8 @@
-import React from "react";
+import prisma from "../../../lib/prisma";
 import { createUseStyles } from "react-jss";
-import Sidebar from "../../components/ui/article/sidebar/sidebar";
-import prisma from "../../lib/prisma";
-import { useRouter } from 'next/router'
+import { revalidateTimeout } from "../../../utils/utils";
+import { useRouter } from 'next/router';
+import Sidebar from "../../../components/ui/article/sidebar/sidebar";
 import Link from 'next/link'
 
 const useStyles = createUseStyles({
@@ -62,14 +62,15 @@ const useStyles = createUseStyles({
   }
 })
 
-const Posts = (props) => {
-  const classes = useStyles()
-  const router = useRouter()
+const PostTopic = ({ posts }) => {
+  const classes = useStyles();
+  const router = useRouter();
 
   const onCreate = () => {
     router.push("http://localhost:3000/posts/create");
   }
-  
+
+  if (router.isFallback) return <p>Loading</p>
   return (
     <>
       <header className={classes.header}></header>
@@ -78,7 +79,7 @@ const Posts = (props) => {
         <div className={classes.articlesContainer}>
           <input type="button" onClick={onCreate} value="Create Post" />
           <h1 className={classes.mostRecent}>Most Recent:</h1>
-          {props.posts.map(f => (
+          {posts.map(f => (
             <article key={f.id} className={classes.article}>
               <h1 className={classes.h1}>
                 <Link href={`/posts/${f.id}`}>
@@ -94,10 +95,39 @@ const Posts = (props) => {
   )
 }
 
-export async function getStaticProps(context) {
+export async function getStaticPaths() {
   const posts = await prisma.post.findMany({
     where: { 
       published: true,
+      topics: {
+        some: {
+          topicId: 1
+        }
+      }
+    },
+    orderBy: {
+      createdAt: "desc"
+    },
+  })
+
+  const paths = posts.map((post) => ({
+    params: { id: post.id.toString() }
+  }))
+
+  return { paths, fallback: true }
+}
+
+export async function getStaticProps({ params }) {
+  const id = parseInt(params.id, 10);
+
+  const posts = await prisma.post.findMany({
+    where: { 
+      published: true,
+      topics: {
+        some: {
+          topicId: id
+        }
+      }
     },
     orderBy: {
       createdAt: "desc"
@@ -108,7 +138,8 @@ export async function getStaticProps(context) {
       },
     },
   })
-  return { props: { posts } }
+
+  return { props: { posts }, revalidate: revalidateTimeout }
 }
 
-export default Posts;
+export default PostTopic;

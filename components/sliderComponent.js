@@ -14,9 +14,9 @@ const useStyles = createUseStyles({
     overflow: 'auto',
     height: "100vh",
     width: "100vw",
-    transformOrigin: "top",
+    transformOrigin: "right",
     transition: "transform .5s ease",
-    transform: "scaleY(0)"
+    transform: "scaleX(0)"
   },
   exit: {
     marginTop: "20px",

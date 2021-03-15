@@ -8,6 +8,7 @@ import { FaLinkedinIn } from 'react-icons/fa';
 import { AiFillGithub } from "react-icons/ai"
 import Blog from "../components/blog";
 import prisma from "../lib/prisma";
+import { revalidateTimeout } from "../utils/utils";
 
 const tabletBreak = '@media (max-width: 1250px)';
 const mobileBreak = '@media (max-width: 720px)';
@@ -122,7 +123,7 @@ const Home = (props) => {
   )
 }
 
-export async function getServerSideProps({ query }) {
+export async function getStaticProps() {
   const categories = await prisma.category.findMany({
     include: {
       topics: {
@@ -133,8 +134,8 @@ export async function getServerSideProps({ query }) {
         },
       },
     },
-  })
-  return { props: { categories } }
+  });
+  return { props: { categories }, revalidate: revalidateTimeout }
 }
 
 export default Home;

@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { createUseStyles } from "react-jss";
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 const useStyles = createUseStyles({
   header: {
@@ -25,14 +25,11 @@ const useStyles = createUseStyles({
 
 const TopicListItem = ({ topic }) => {
   const classes = useStyles();
-  const router = useRouter();
-
-  const onClick = () => {
-    router.push(`${router.asPath}?topic=${topic.id}`)
-  }
 
   return (
-    <span onClick={onClick} className={classes.header}>{topic.title}</span>
+    <Link href={`/posts/topics/${topic.id}`}>
+      <a className={classes.header}>{topic.title}</a>
+    </Link>
   )
 }
 
