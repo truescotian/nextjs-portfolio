@@ -64,7 +64,6 @@ const useStyles = createUseStyles({
     flexFlow: "row nowrap",
     width: "min-content",
     margin: "0 auto",
-    backgroundColor: "#1b242f",
     padding: "0px 20px",
     paddingTop: "10px",
     justifyContent: "center",
@@ -125,16 +124,9 @@ const Home = (props) => {
 
 export async function getStaticProps() {
   const categories = await prisma.category.findMany({
-    include: {
-      topics: {
-        include: {
-          posts: {
-            include: { post: true}
-          }
-        },
-      },
-    },
+    include: { posts: true },
   });
+
   return { props: { categories }, revalidate: revalidateTimeout }
 }
 

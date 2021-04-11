@@ -1,11 +1,13 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
-import Article from "../../components/ui/article/article";
-import Sidebar from "../../components/ui/article/sidebar/sidebar";
-import Section from "../../components/ui/article/sidebar/section";
 import prisma from "../../lib/prisma";
 import { useRouter } from 'next/router';
+
 import { revalidateTimeout } from "../../utils/utils";
+
+import Sidebar from "../../components/ui/article/sidebar/sidebar";
+import Section from "../../components/ui/article/sidebar/section";
+import PostList from "../../components/ui/list/postList";
 
 const useStyles = createUseStyles({
   header: {
@@ -25,11 +27,18 @@ const useStyles = createUseStyles({
   }
 })
 
-const Post = ({ categories, post }) => {
+const Category = ({ categories, params }) => {
   const classes = useStyles();
   const router = useRouter();
 
+  const onCreate = () => {
+    router.push("http://localhost:3000/posts/create");
+  }
+
   if (router.isFallback) return <p>Loading</p>
+
+  const selectedCategory = categories.find((category) => category.id = parseInt(params.id))
+
   return (
     <>
       <header className={classes.header}></header>
@@ -37,21 +46,24 @@ const Post = ({ categories, post }) => {
         <Sidebar>
           {categories.map(c => <Section key={c.id} category={c} /> )}
         </Sidebar>
-        {post && <Article post={post} />}
+        <div className={classes.articlesContainer}>
+          <input type="button" onClick={onCreate} value="Create Post" />
+          <h1 className={classes.mostRecent}>Most Recent:</h1>
+          <PostList posts={selectedCategory.posts} />
+        </div>
       </div>
     </>
   )
 }
 
 export async function getStaticPaths() {
-  const posts = await prisma.post.findMany({
+  const categories = await prisma.category.findMany({
     select: { id: true}
   })
 
-  const paths = posts.map((post) => ({
-    params: { id: post.id.toString() }
+  const paths = categories.map((category) => ({
+    params: { id: category.id.toString() }
   }))
-
 
   return { paths, fallback: true }
 }
@@ -60,9 +72,6 @@ export async function getStaticPaths() {
 // It won't be called on client-side, so you can even do
 // direct database queries. See the "Technical details" section.
 export async function getStaticProps({ params }) {
-  const post = await prisma.post.findFirst({
-    where: { id: parseInt(params.id) },
-  })
   const categories = await prisma.category.findMany({
     include: {
       posts: {
@@ -74,8 +83,7 @@ export async function getStaticProps({ params }) {
       },
     },
   })
-  return { props: { post, categories }, revalidate: revalidateTimeout }
+  return { props: { categories, params }, revalidate: revalidateTimeout }
 }
 
-
-export default Post;
+export default Category;

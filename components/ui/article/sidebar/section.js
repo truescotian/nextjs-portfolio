@@ -1,6 +1,6 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
-import TopicListItem from "./topicListItem";
+import PostListItem from "./postListItem";
 
 const useStyles = createUseStyles({
   container: {
@@ -40,14 +40,14 @@ const useStyles = createUseStyles({
 
 const Section = ({ category }) => {
   const classes = useStyles()
-  const { title, topics } = category;
+  const { title, posts } = category;
   return (
     <div className={classes.container}>
       <span className={classes.title}>
         {title}
       </span>
-      {topics && topics.map(topic => (
-        <TopicListItem key={topic.id} topic={topic} />
+      {posts && posts.map(post => (
+        <PostListItem key={post.id} post={post} />
       ))}
     </div>
   )

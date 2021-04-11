@@ -17,15 +17,17 @@ model Post {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   author    User     @relation(fields: [authorId], references: [id])
   authorId  Int
-  topics    PostTopics[]
+  tags      PostTags[]
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
 }
 
-model PostTopics {
+model PostTags {
   id     Int   @id @default(autoincrement())
   post   Post? @relation(fields: [postId], references: [id])
-  topic    Topic?  @relation(fields: [topicId], references: [id])
+  tag    Tag?  @relation(fields: [tagId], references: [id])
   postId Int?
-  topicId  Int?
+  tagId  Int?
 }
 
 model User {
@@ -44,15 +46,13 @@ model Category {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
   title     String?
-  topics    Topic[]
+  posts     Post[]
 }
 
-model Topic {
+model Tag {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
   title      String?
-  categoryId Int
-  category   Category @relation(fields: [categoryId], references: [id])
-  posts      PostTopics[]
+  posts      PostTags[]
 }

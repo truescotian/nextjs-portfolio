@@ -23,14 +23,14 @@ const useStyles = createUseStyles({
   }
 })
 
-const TopicListItem = ({ topic }) => {
+const PostListItem = ({ post }) => {
   const classes = useStyles();
 
   return (
-    <Link href={`/posts/topics/${topic.id}`}>
-      <a className={classes.header}>{topic.title}</a>
+    <Link href={`/posts/${post.id}`}>
+      <a className={classes.header}>{post.title}</a>
     </Link>
   )
 }
 
-export default TopicListItem;
+export default PostListItem;

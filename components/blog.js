@@ -149,11 +149,15 @@ const Blog = ({ categories }) => {
     router.push(`/posts/${id}`);
   }
 
+  function onClickCategory(id) {
+    router.push(`/categories/${id}`)
+  }
+
   return (
     <div className={classes.container}>
 
       <TransitionGroup component={null}>
-        {categories.map(({ id, title, topics }) => (
+        {categories.map(({ id, title, posts }) => (
             <div key={id} className={classes.categoryContainer}>
               <CSSTransition 
                 in={true} 
@@ -172,35 +176,33 @@ const Blog = ({ categories }) => {
                 <div className={classes.aside}>
                   <p className={classes.asideTitle}>{title}</p>
                   <p className={classes.asideDescription}>Browse through my selection of {title} articles.</p>
-                  <button className={classes.filterButton}>All articles about {title} -></button>
+                  <button onClick={() => onClickCategory(id)} className={classes.filterButton}>All articles about {title} -></button>
                 </div>
               </CSSTransition>
 
               <div className={classes.blogList}>
                 <TransitionGroup component={null}>
-                  {topics.map(({ id, posts }) => (
+                  {posts.map(({ id, title, subTitle }) => id > 0 ? (
                     <React.Fragment key={id}>
-                      {posts.map(({ postId, post }) => post ? (
-                        <CSSTransition
-                          key={postId}
-                          in={true} 
-                          timeout={0}
-                          unmountOnExit
-                          classNames={{
-                            enter: classes.enterActive,
-                            enterDone: classes.enterDone,
-                            exit: classes.exitActive
-                          }}
-                          appear
-                        >
-                          <div className={classes.blogItem} onClick={() => onClickPost(postId)}>
-                            <h1 className={classes.h1}>{post.title}</h1>
-                            <p className={classes.p}>{post.subTitle}</p>
-                          </div>
-                        </CSSTransition>
-                      ): null)}
+                      <CSSTransition
+                        key={id}
+                        in={true} 
+                        timeout={0}
+                        unmountOnExit
+                        classNames={{
+                          enter: classes.enterActive,
+                          enterDone: classes.enterDone,
+                          exit: classes.exitActive
+                        }}
+                        appear
+                      >
+                        <div className={classes.blogItem} onClick={() => onClickPost(id)}>
+                          <h1 className={classes.h1}>{title}</h1>
+                          <p className={classes.p}>{subTitle}</p>
+                        </div>
+                      </CSSTransition>
                     </React.Fragment>
-                  ))}
+                  ) : null)}
                 </TransitionGroup>
               </div>
             </div>

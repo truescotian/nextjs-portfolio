@@ -22,8 +22,8 @@ const useStyles = createUseStyles({
     marginTop: "20px",
     marginLeft: "auto",
     marginRight: "20px",
-    height: "min-content",
-    width: "min-content",
+    height: "auto",
+    width: "auto",
     fontSize: "50px",
     transform: "rotate(45deg)",
     fontWeight: "200",
@@ -36,7 +36,7 @@ const useStyles = createUseStyles({
     transform: "scaleY(1)",
   },
   exitActive: {
-    transform: "scaleY(0)",
+    transform: "scaleX(0)",
   },
   fs: {
     minHeight: "100%",

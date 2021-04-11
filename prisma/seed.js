@@ -7,15 +7,9 @@ async function main() {
     update: {},
     create: {
       title: "category1",
-      topics: {
-        create: [
-          {
-            title: "topic1"
-          }
-        ]
-      }
     },
   })
+
   await prisma.user.upsert({
     where: { email: 'bob@prisma.io' },
     update: {},
@@ -29,12 +23,23 @@ async function main() {
             subTitle: "sub title",
             content: "",
             published: true,
+            categoryId: 1,
           },
           {
             title: "title2",
             subTitle: "sub title2",
             content: "",
             published: true,
+            categoryId: 1,
+            tags: {
+              create: [{ // explicit relation so must do this
+                tag: {
+                  create: {
+                    title: "tag1"
+                  }
+                }
+              }]
+            }
           },
         ],
       },

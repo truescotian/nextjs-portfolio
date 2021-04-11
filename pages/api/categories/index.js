@@ -3,8 +3,12 @@ import prisma from "../../../lib/prisma";
 const handler = async (req, res) => {
   const categories = await prisma.category.findMany({
     include: {
-      topics: {
-        select: { id: true, title: true, },
+      posts: {
+        include: {
+          tags: {
+            include: { tag: true }
+          }
+        },
       },
     },
   })
