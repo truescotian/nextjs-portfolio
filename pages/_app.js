@@ -1,12 +1,12 @@
-import App from 'next/app'
+import { Provider } from "next-auth/client"
 import '../styles/globals.css'
 
-export default class MyApp extends App {
-  componentDidMount() {
-    const style = document.getElementById('server-side-styles')
-
-    if (style) {
-      style.parentNode.removeChild(style)
-    }
-  }
+function MyApp({ Component, pageProps }) {
+  return (
+    <Provider session={pageProps.session}>
+      <Component {...pageProps} />
+    </Provider>
+  );
 }
+
+export default MyApp;
