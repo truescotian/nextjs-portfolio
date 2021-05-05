@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { useRouter } from 'next/router'
-import prisma from "../../lib/prisma";
+import prisma from "../../../lib/prisma";
 
-const Create = ({ allTopics }) => {
+const Create = ({ allTags, allCategories }) => {
   const [title, setTitle] = useState("");
   const [subTitle, setSubTitle] = useState("");
   const [content, setContent] = useState("");
-  const [topicIds, setTopicIds] = useState([]);
+  const [tagIds, setTagIds] = useState([]);
+  const [categoryId, setCategoryId] = useState("Select");
   const router = useRouter();
   
   const handleContent = (content, editor) => setContent(content);
@@ -16,33 +17,33 @@ const Create = ({ allTopics }) => {
     return { __html: content }
   }
 
-  const handleTopicChange = e => {
+  const handleTagChange = e => {
     const id = parseInt(e.target.value, 10);
 
-    // check if topic is already selected
+    // check if tag is already selected
     let foundIdx = -1;
-    for (let i=0; i<topicIds.length;i++) {
-      if (topicIds[i] === id) {
+    for (let i=0; i<tagIds.length;i++) {
+      if (tagIds[i] === id) {
         foundIdx = i;
         break;
       }
     }
 
-    // if topic is selected, remove it
+    // if tag is selected, remove it
     if (foundIdx > -1) {
-      let newTopics = topicIds.splice(foundIdx, 1);
-      setTopicIds(newTopics);
+      let newTags = tagIds.splice(foundIdx, 1);
+      setTagIds(newTags);
     } else {
-      setTopicIds([...topicIds, id])
+      setTagIds([...tagIds, id])
     }
   }
 
   const onSubmit = async e => {
     e.preventDefault();
 
-    let selectedTopics = [];
-    for (let i=0;i<topicIds.length;i++) {
-      selectedTopics = [...selectedTopics, { topicId: topicIds[i] }]
+    let selectedTags = [];
+    for (let i=0;i<tagIds.length;i++) {
+      selectedTags = [...selectedTags, { tagId: tagIds[i] }]
     }
     
     try {
@@ -52,7 +53,8 @@ const Create = ({ allTopics }) => {
         content: content,
         published: true,
         authorId: 1,
-        topicIds: selectedTopics
+        categoryId,
+        tagIds: selectedTags
       }
       const res = await fetch(`http://localhost:3000/api/posts/create`, {
         method: 'POST',
@@ -74,11 +76,20 @@ const Create = ({ allTopics }) => {
       <p>Sub Title</p>
       <input type="text" onChange={e => setSubTitle(e.target.value)} value={subTitle} />
 
-      <p>Topics</p>
+      <p>Tags</p>
 
-      <select multiple={true} value={topicIds} onChange={handleTopicChange}>
-        {allTopics.map(( topic ) => (
-          <option value={topic.id} key={topic.id}>{topic.title}</option>
+      <select multiple={true} value={tagIds} onChange={handleTagChange}>
+        {allTags.map(( tag ) => (
+          <option value={tag.id} key={tag.id}>{tag.title}</option>
+        ))}
+      </select>
+
+      <p>Category</p>
+
+      <select value={categoryId} onChange={e => setCategoryId(parseInt(e.target.value, 10))}>
+        <option value="Select" disabled={true}>Select</option>
+        {allCategories.map(( category ) => (
+          <option value={category.id} key={category.id}>{category.title}</option>
         ))}
       </select>
 
@@ -110,8 +121,9 @@ const Create = ({ allTopics }) => {
 }
 
 export async function getServerSideProps({ query }) {
-  const topics = await prisma.topic.findMany({})
-  return { props: { allTopics: topics } }
+  const tags = await prisma.tag.findMany({})
+  const categories = await prisma.category.findMany({})
+  return { props: { allTags: tags, allCategories: categories } }
 }
 
 export default Create;

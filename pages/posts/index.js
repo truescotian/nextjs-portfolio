@@ -31,7 +31,7 @@ const Posts = (props) => {
   const router = useRouter()
 
   const onCreate = () => {
-    router.push("http://localhost:3000/posts/create");
+    router.push("http://localhost:3000/posts/admin/posts/create");
   }
 
   return (

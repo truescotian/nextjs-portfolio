@@ -4,6 +4,7 @@ import Article from "../../components/ui/article/article";
 import Sidebar from "../../components/ui/article/sidebar/sidebar";
 import Section from "../../components/ui/article/sidebar/section";
 import prisma from "../../lib/prisma";
+
 import { useRouter } from 'next/router';
 import { revalidateTimeout } from "../../utils/utils";
 
@@ -59,7 +60,8 @@ export async function getStaticPaths() {
 // This function gets called at build time on server-side.
 // It won't be called on client-side, so you can even do
 // direct database queries. See the "Technical details" section.
-export async function getStaticProps({ params }) {
+export async function getStaticProps(context) {
+  const { params } = context;
   const post = await prisma.post.findFirst({
     where: { id: parseInt(params.id) },
   })

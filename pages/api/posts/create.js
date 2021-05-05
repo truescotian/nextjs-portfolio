@@ -8,9 +8,10 @@ const handler = async (req, res) => {
       subTitle: req.body.subTitle,
       title: req.body.title,
       authorId: req.body.authorId,
-      topics: {
-        create: req.body.topicIds,
-      }
+      tags: {
+        create: req.body.tagIds,
+      },
+      categoryId: req.body.categoryId
     }
   })
 
