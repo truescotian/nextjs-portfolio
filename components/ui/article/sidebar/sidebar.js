@@ -1,6 +1,6 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
-import useCategories from "../../../../hooks/useCategories";
+import useSidebar from "../../../../hooks/useSidebar";
 import Section from "./section";
 
 const useStyles = createUseStyles({
@@ -19,17 +19,20 @@ const useStyles = createUseStyles({
   },
 });
 
+const renderCategories = categories => {
+  return categories.map(c => <Section key={c.id} category={c} />)
+}
+
 const Sidebar = () => {
   const classes = useStyles()
-  const { categories, isLoading, isError } = useCategories();
+  const { data, isLoading, isError } = useSidebar();
 
   if (isError) return "An error has occured.";
-  if (isLoading) return "Loading...";
 
   return (
     <aside className={classes.sidebar}>
       <div className={classes.content}>
-        {categories.map(c => <Section key={c.id} category={c} /> )}
+        {isLoading ? "Loading" : renderCategories(data.categories)}
       </div>
     </aside>
   )

@@ -10,7 +10,7 @@ const useStyles = createUseStyles({
     position: "absolute",
     top: "0",
     left: "0",
-    backgroundColor: "#23272f",
+    backgroundColor: "#171717",
     overflow: 'auto',
     height: "100vh",
     width: "100vw",

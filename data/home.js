@@ -16,6 +16,5 @@ export const homeData = [
     page: "contact",
     title: "Contact.",
     body: "Shoot me a message!",
-    backgroundColor: "#000"
   },
 ]
