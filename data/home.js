@@ -3,7 +3,8 @@ export const homeData = [
     num: "01 -",
     page: "blog",
     title: "Blog.",
-    body: "Lessons learned throughout projects I've worked on. Topics range from binary to VR game development."
+    body: "Lessons learned throughout projects I've worked on. Topics range from binary to VR game development.",
+    backgroundColor: "rgb(33, 33, 43)"
   },
   {
     num: "02 -",

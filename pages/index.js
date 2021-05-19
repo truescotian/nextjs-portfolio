@@ -9,6 +9,7 @@ import { AiFillGithub } from "react-icons/ai"
 import Blog from "../components/blog";
 import prisma from "../lib/prisma";
 import { revalidateTimeout } from "../utils/utils";
+import { CSSTransition } from "react-transition-group";
 
 const tabletBreak = '@media (max-width: 1250px)';
 const mobileBreak = '@media (max-width: 720px)';
@@ -21,6 +22,13 @@ const useStyles = createUseStyles({
     display: "flex",
     flexFlow: "column nowrap",
     justifyContent: "space-between"
+  },
+  contentContainer: {
+    height: '100%',
+    display: "flex",
+    flexFlow: "column nowrap",
+    justifyContent: "space-between",
+    transition: "transform 0.75s cubic-bezier(0.75, 0.25, 0, 1.05)",
   },
   content: {
     display: 'grid',
@@ -72,7 +80,28 @@ const useStyles = createUseStyles({
   socialIcon: {
     padding: "10px",
     cursor: "pointer"
-  }
+  },
+  contentEnter: {
+    transform: "translateX(-100%)",
+  },
+  contentEnterActive: {
+    transform: "translateX(0px)",
+  },
+  contentExit: {
+    transform: "translateX(0px)",
+  },
+  contentExitActive: {
+    transform: "translateX(-100%)",
+  },
+  contentExitDone: {
+    transform: "translateX(-100%)",
+  },
+  contentAppear: {
+    transform: "translateX(-100px)",
+  },
+  contentAppearActive: {
+    transform: "translateX(0px)",
+  },
 })
 
 const pages = {
@@ -101,21 +130,36 @@ const Home = (props) => {
   return (
     <main className={classes.container}>
 
-      <div className={classes.content}>
-        <div className={classes.left}><span className={classes.span}>Greg Miller</span></div>
-        <ol className={classes.list}>
-          {homeData.map((o, index) => <ListItem key={index} {...o} onClick={() => onSetShow(o.page)} />)}
-        </ol>
-      </div>
+      <CSSTransition
+        in={!show}
+        classNames={{
+          enter: classes.contentEnter,
+          enterActive: classes.contentEnterActive,
+          exit: classes.contentExit,
+          exitActive: classes.contentExitActive,
+          exitDone: classes.contentExitDone,
+          appear: classes.contentAppear,
+          appearActive: classes.contentAppearActive,
+        }}>
+          <div className={classes.contentContainer}>
+            <div className={classes.content}>
+              <div className={classes.left}><span className={classes.span}>Greg Miller</span></div>
+              <ol className={classes.list}>
+                {homeData.map((o, index) => <ListItem key={index} {...o} onClick={() => onSetShow(o.page)} />)}
+              </ol>
+            </div>
 
-      <div className={classes.socials}>
-        <Icon classes={classes} href={"https://www.linkedin.com/in/gregpmillr/"}>
-          <FaLinkedinIn size={"2em"} />
-        </Icon>
-        <Icon classes={classes} href={"https://github.com/truescotian?tab=repositories"}>
-        <AiFillGithub size={"2em"} />
-      </Icon>
-      </div>
+            <div className={classes.socials}>
+              <Icon classes={classes} href={"https://www.linkedin.com/in/gregpmillr/"}>
+                <FaLinkedinIn size={"2em"} />
+              </Icon>
+              <Icon classes={classes} href={"https://github.com/truescotian?tab=repositories"}>
+              <AiFillGithub size={"2em"} />
+            </Icon>
+            </div>
+          </div>
+      </CSSTransition>
+
 
       <SliderComponent setPage={setPage} setShow={setShow} show={show} page={page} pages={pages} {...props} />
     </main>

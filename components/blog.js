@@ -31,7 +31,7 @@ const useStyles = createUseStyles({
     flexFlow: "column nowrap",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    transition: "all .8s cubic-bezier(0.215, 0.61, 0.355, 1) .5s",
+    transition: "all .8s cubic-bezier(0.215, 0.61, 0.355, 1) .4s",
   },
   asideTitle: {
     textAlign: "center",

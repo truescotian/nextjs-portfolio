@@ -69,7 +69,6 @@ export default function SliderComponent({ setPage, setShow, show, page, pages, .
     setStyles(tempStyles)
   },[page])
 
-
   return (
     <CSSTransition 
         in={show} 
