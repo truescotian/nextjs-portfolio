@@ -15,7 +15,7 @@ const useStyles = createUseStyles({
     height: "100vh",
     width: "100vw",
     transformOrigin: "right",
-    transition: "transform .5s ease",
+    transition: "transform 0.75s cubic-bezier(0.75, 0.25, 0, 1.05)",
     transform: "scaleX(0)"
   },
   exit: {
@@ -73,7 +73,7 @@ export default function SliderComponent({ setPage, setShow, show, page, pages, .
   return (
     <CSSTransition 
         in={show} 
-        timeout={500} 
+        timeout={1000} 
         unmountOnExit
         classNames={{
           enterActive: classes.enterActive,

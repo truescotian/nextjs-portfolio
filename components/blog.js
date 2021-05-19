@@ -31,7 +31,7 @@ const useStyles = createUseStyles({
     flexFlow: "column nowrap",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    transition: "opacity 1s ease, transform 1s ease",
+    transition: "all .8s cubic-bezier(0.215, 0.61, 0.355, 1) .5s",
   },
   asideTitle: {
     textAlign: "center",
@@ -62,7 +62,7 @@ const useStyles = createUseStyles({
     borderLeft: "1px solid #ffffff4d",
     color: "#fff",
     transform: "translateX(10%)",
-    transition: "opacity 1s ease, transform 1s ease",
+    transition: "all .6s cubic-bezier(0.215, 0.61, 0.355, 1) .8s",
     opacity: "0",
     marginBottom: "40px"
   },
@@ -101,7 +101,6 @@ const useStyles = createUseStyles({
     background: "linear-gradient(to left, #131313 50%, #fff 50%)",
     backgroundSize: "200% 100%",
     backgroundPosition: "right bottom",
-    transition: "all 0.5s ease",
     "&:hover": {
       color: "#526693",
       backgroundPosition: "left bottom"
@@ -109,7 +108,7 @@ const useStyles = createUseStyles({
   },
   btnEnter: {
     opacity: "0",
-    transform: "translateX(-50px)"
+    transform: "translateX(-500px)"
   },
   btnEnterActive: {
     opacity: "1",
@@ -120,15 +119,15 @@ const useStyles = createUseStyles({
     opacity: "1"
   },
   btnExitActive: {
-    transform: "translateX(-10px)",
+    transform: "translateX(-500px)",
     opacity: "0.2",
   },
   btnExitDone: {
-    transform: "translateX(-25px)",
+    transform: "translateX(-500px)",
     opactiy: "0"
   },
   btnAppear: {
-    transform: "translateX(-25px)",
+    transform: "translateX(-100px)",
     opacity: "0"
   },
   btnAppearActive: {
