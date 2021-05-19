@@ -30,17 +30,12 @@ const Posts = (props) => {
   const classes = useStyles()
   const router = useRouter()
 
-  const onCreate = () => {
-    router.push("http://localhost:3000/posts/admin/posts/create");
-  }
-
   return (
     <>
       <header className={classes.header}></header>
       <div className={classes.container}>
         <Sidebar />
         <div className={classes.articlesContainer}>
-          <input type="button" onClick={onCreate} value="Create Post" />
           <h1 className={classes.mostRecent}>Most Recent:</h1>
           <PostList posts={props.posts} />
         </div>

@@ -24,32 +24,27 @@ const useStyles = createUseStyles({
     gridTemplateRows: "1fr",
     gridTemplateColumns: "1fr 3fr 1fr",
     color: "#000"
-  }
+  },
+  articlesContainer: {
+    padding: "0px 88px"
+  },
 })
 
-const Category = ({ categories, params }) => {
+const Category = ({ category, params }) => {
   const classes = useStyles();
   const router = useRouter();
 
-  const onCreate = () => {
-    router.push("http://localhost:3000/posts/create");
-  }
 
   if (router.isFallback) return <p>Loading</p>
-
-  const selectedCategory = categories.find((category) => category.id = parseInt(params.id))
 
   return (
     <>
       <header className={classes.header}></header>
       <div className={classes.container}>
-        <Sidebar>
-          {categories.map(c => <Section key={c.id} category={c} /> )}
-        </Sidebar>
+        <Sidebar />
         <div className={classes.articlesContainer}>
-          <input type="button" onClick={onCreate} value="Create Post" />
           <h1 className={classes.mostRecent}>Most Recent:</h1>
-          <PostList posts={selectedCategory.posts} />
+          <PostList posts={category.posts} />
         </div>
       </div>
     </>
@@ -72,7 +67,8 @@ export async function getStaticPaths() {
 // It won't be called on client-side, so you can even do
 // direct database queries. See the "Technical details" section.
 export async function getStaticProps({ params }) {
-  const categories = await prisma.category.findMany({
+  const category = await prisma.category.findUnique({
+    where: { id: Number(params.id) },
     include: {
       posts: {
         include: {
@@ -83,7 +79,7 @@ export async function getStaticProps({ params }) {
       },
     },
   })
-  return { props: { categories, params }, revalidate: revalidateTimeout }
+  return { props: { category, params }, revalidate: revalidateTimeout }
 }
 
 export default Category;

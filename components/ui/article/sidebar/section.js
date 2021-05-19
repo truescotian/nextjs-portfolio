@@ -1,6 +1,8 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
 import PostListItem from "./postListItem";
+import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 const useStyles = createUseStyles({
   container: {
@@ -9,14 +11,15 @@ const useStyles = createUseStyles({
     fontWeight: "500"
   },
   title: {
-    fontWeight: "700",
-    fontSize: "12px",
-    textTransform: "uppercase",
+    fontWeight: "500",
+    fontSize: "14px",
     letterSpacing: "1.2px",
+    lineHeight: "1.5",
     color: "rgb(157, 170, 182)",
     display: "block",
     marginBottom: "15px",
-    padding: "7px 24px 7px 16px"
+    padding: "7px 24px 7px 16px",
+    textDecoration: "none"
   },
   header: {
     fontSize: "14px",
@@ -28,24 +31,23 @@ const useStyles = createUseStyles({
   },
   headerSelected: {
     backgroundColor: "#fff",
-    letterSpacing: "0.3px",
     color: "rgb(66, 179, 244)",
-    fontSize: "14px",
-    cursor: "pointer",
-    display: "block",
-    padding: "7px 24px 7px 16px",
     border: "1px solid rgb(230, 236, 241) !important"
   }
 })
 
 const Section = ({ category }) => {
   const classes = useStyles()
-  const { title, posts } = category;
+  const router = useRouter()
+  const { title, posts, id } = category;
+  const active = id === parseInt(router.query.id, 10) ? true : false
   return (
     <div className={classes.container}>
-      <span className={classes.title}>
-        {title}
-      </span>
+      <Link href="/categories/[id]" as={`/categories/${category.id}`}>
+        <a className={`${classes.title} ${active && classes.headerSelected}`}>
+          {title}
+        </a>
+      </Link>
       {posts && posts.map(post => (
         <PostListItem key={post.id} post={post} />
       ))}

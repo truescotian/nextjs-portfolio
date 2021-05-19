@@ -31,11 +31,11 @@ const useStyles = createUseStyles({
 const Post = ({ post, allTags, allCategories }) => {
   const classes = useStyles()
   const router = useRouter()
-  const [title, setTitle] = useState(post.title)
-  const [subTitle, setSubTitle] = useState(post.subTitle);
-  const [content, setContent] = useState(post.content);
-  const [tagIds, setTagIds] = useState(post.tags.map(postTag => postTag.tag.id));
-  const [categoryId, setCategoryId] = useState(post.categoryId);
+  const [title, setTitle] = useState(post?.title || "")
+  const [subTitle, setSubTitle] = useState(post?.subTitle || "");
+  const [content, setContent] = useState(post?.content || "");
+  const [tagIds, setTagIds] = useState(post?.tags.map(postTag => postTag.tag.id) || []);
+  const [categoryId, setCategoryId] = useState(post?.categoryId || 0);
   const [ session, loading ] = useSession()
 
   const onDelete = async () => {
@@ -204,7 +204,7 @@ export async function getStaticProps(context) {
   const tags = await prisma.tag.findMany({})
   const categories = await prisma.category.findMany({})
   const { params } = context;
-  const post = await prisma.post.findFirst({
+  const post = await prisma.post.findUnique({
     where: { 
       id: parseInt(params.id) 
     },

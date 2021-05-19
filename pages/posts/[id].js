@@ -2,7 +2,6 @@ import React from "react";
 import { createUseStyles } from "react-jss";
 import Article from "../../components/ui/article/article";
 import Sidebar from "../../components/ui/article/sidebar/sidebar";
-import Section from "../../components/ui/article/sidebar/section";
 import prisma from "../../lib/prisma";
 
 import { useRouter } from 'next/router';
@@ -26,7 +25,7 @@ const useStyles = createUseStyles({
   }
 })
 
-const Post = ({ categories, post }) => {
+const Post = ({ post }) => {
   const classes = useStyles();
   const router = useRouter();
 
@@ -35,9 +34,7 @@ const Post = ({ categories, post }) => {
     <>
       <header className={classes.header}></header>
       <div className={classes.container}>
-        <Sidebar>
-          {categories.map(c => <Section key={c.id} category={c} /> )}
-        </Sidebar>
+        <Sidebar />
         {post && <Article post={post} />}
       </div>
     </>
@@ -53,7 +50,6 @@ export async function getStaticPaths() {
     params: { id: post.id.toString() }
   }))
 
-
   return { paths, fallback: true }
 }
 
@@ -65,18 +61,7 @@ export async function getStaticProps(context) {
   const post = await prisma.post.findFirst({
     where: { id: parseInt(params.id) },
   })
-  const categories = await prisma.category.findMany({
-    include: {
-      posts: {
-        include: {
-          tags: {
-            include: { tag: true }
-          }
-        },
-      },
-    },
-  })
-  return { props: { post, categories }, revalidate: revalidateTimeout }
+  return { props: { post }, revalidate: revalidateTimeout }
 }
 
 

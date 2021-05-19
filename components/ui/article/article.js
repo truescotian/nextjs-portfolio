@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { createUseStyles } from "react-jss";
-import { useRouter } from 'next/router'
 
 const useStyles = createUseStyles({
   article: {
