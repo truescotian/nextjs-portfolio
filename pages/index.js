@@ -40,7 +40,6 @@ const useStyles = createUseStyles({
     [tabletBreak]: {
       gridTemplateColumns: "1fr",
       padding: "20px",
-      paddingRight: "0px",
     },
     [mobileBreak]: {
       padding: "20px",
@@ -50,6 +49,10 @@ const useStyles = createUseStyles({
   left: {
     fontSize: "14px",
     letterSpacing: "normal",
+    [tabletBreak]: {
+      padding: "0px 40px",
+      margin: "20px 0px",
+    }
   },
   list: {
     display: "flex",
@@ -59,6 +62,10 @@ const useStyles = createUseStyles({
     },
     "& li:not(:first-child)": {
       marginTop: "60px"
+    },
+    [tabletBreak]: {
+      marginTop: "10px",
+      marginRight: "40px"
     }
   },
   span: {
@@ -132,6 +139,7 @@ const Home = (props) => {
 
       <CSSTransition
         in={!show}
+        timeout={0}
         classNames={{
           enter: classes.contentEnter,
           enterActive: classes.contentEnterActive,

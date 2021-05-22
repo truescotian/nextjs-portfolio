@@ -6,6 +6,8 @@ import {
 } from 'react-transition-group';
 import { useRouter } from 'next/router'
 
+const tabletBreak = '@media (max-width: 1250px)';
+
 const useStyles = createUseStyles({
   container: {
     display: "flex",
@@ -13,6 +15,9 @@ const useStyles = createUseStyles({
     margin: "0 auto",
     "& > div:not(:first-child)": {
       borderTop: "1px solid grey",
+    },
+    [tabletBreak]: {
+      margin: "0px 50px"
     }
   },
   blogList: {
@@ -21,7 +26,11 @@ const useStyles = createUseStyles({
     display: "flex",
     flexFlow: "column nowrap", 
     justifyContent: "flex-start",
-    maxWidth: "800px"
+    maxWidth: "800px",
+    [tabletBreak]: {
+      minWidth: "0px",
+      margin: "0px"
+    }
   },
   aside: {
     margin: "30px",
@@ -32,6 +41,10 @@ const useStyles = createUseStyles({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     transition: "all .8s cubic-bezier(0.215, 0.61, 0.355, 1) .4s",
+    [tabletBreak]: {
+      marginLeft: "0px",
+      marginRight: "0px"
+    }
   },
   asideTitle: {
     textAlign: "center",
@@ -64,7 +77,10 @@ const useStyles = createUseStyles({
     transform: "translateX(10%)",
     transition: "all .6s cubic-bezier(0.215, 0.61, 0.355, 1) .8s",
     opacity: "0",
-    marginBottom: "40px"
+    marginBottom: "40px",
+    [tabletBreak]: {
+      minWidth: "0px",
+    }
   },
   h1: {
     color: "#fff",
@@ -137,6 +153,9 @@ const useStyles = createUseStyles({
   categoryContainer: {
     display: "flex",
     flexFlow: "row nowrap",
+    [tabletBreak]: {
+      flexFlow: "column nowrap"
+    }
   }
 })
 
@@ -159,6 +178,7 @@ const Blog = ({ categories }) => {
         {categories.map(({ id, title, posts }) => (
             <div key={id} className={classes.categoryContainer}>
               <CSSTransition 
+                timeout={0}
                 in={true} 
                 unmountOnExit
                 classNames={{
