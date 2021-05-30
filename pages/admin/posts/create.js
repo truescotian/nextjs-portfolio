@@ -3,18 +3,7 @@ import { Editor } from '@tinymce/tinymce-react'
 import { useRouter } from 'next/router'
 import prisma from "../../../lib/prisma"
 
-import { createUseStyles } from "react-jss";
-
-const useStyles = createUseStyles({
-  createTag: {
-    "& button": {
-      color: "blue",
-      background: "none",
-      border: "none",
-      cursor: "pointer"
-    }
-  }
-})
+import CreateTag from "../../ui/tag/create"
 
 const Create = ({ allTags, allCategories }) => {
   const [title, setTitle] = useState("")
@@ -23,7 +12,6 @@ const Create = ({ allTags, allCategories }) => {
   const [tagIds, setTagIds] = useState([])
   const [categoryId, setCategoryId] = useState("Select")
   const [toggleAddTag, setToggleAddTag] = useState(false)
-  const [tagValue, setTagValue] = useState("")
   const [categoryValue, setCategoryValue] = useState("")
   const [tags, setTags] = useState(allTags)
   const [categories, setCategories] = useState(allCategories)
@@ -40,26 +28,6 @@ const Create = ({ allTags, allCategories }) => {
   const onToggleAddTag = () => setToggleAddTag(!toggleAddTag);
 
   const onToggleAddCategory = () => setToggleAddCategory(!toggleAddCategory);
-
-  const onCreateTag = async () => {
-    try {
-      const body = {
-        title: tagValue
-      }
-      const res = await fetch(`http://localhost:3000/api/tags/create`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
-      const data = await res.json()
-      setTagValue("")
-      toggleAddTag()
-      setTags([...tags, data])
-      console.debug("Created")
-    } catch (error) {
-      console.error(error)
-    }
-  }
 
   const onCreateCategory = async () => {
     try {
@@ -132,9 +100,12 @@ const Create = ({ allTags, allCategories }) => {
     }
   }
 
-  const onChangeTag = e => setTagValue(e.target.value)
-
   const onChangeCategory = e => setCategoryValue(e.target.value)
+
+  function onCreateTag(tag) {
+    onToggleAddTag()
+    setTags([...tags, tag]) 
+  }
 
   return (
     <>
@@ -156,12 +127,7 @@ const Create = ({ allTags, allCategories }) => {
 
       <button onClick={onToggleAddTag}>+ Add Tag</button>
 
-      {toggleAddTag &&
-        <div className={classes.createTag}>
-          <input type="text" onChange={onChangeTag} value={tagValue} name="tag" />
-          <button onClick={onCreateTag}>Save</button>
-        </div>
-      }
+      {toggleAddTag && <CreateTag callback={onCreateTag} /> }
 
       <p>Category</p>
 

@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { createUseStyles } from "react-jss";
+import React, { useState } from 'react'
+import { createUseStyles } from "react-jss"
 
-import Sidebar from "../../../components/ui/article/sidebar/sidebar";
-import Section from "../../../components/ui/article/sidebar/section";
-import prisma from "../../../lib/prisma";
+import Sidebar from "../../../components/ui/article/sidebar/sidebar"
+import Section from "../../../components/ui/article/sidebar/section"
+import CreateTag from "../../../components/ui/tag/create"
+import prisma from "../../../lib/prisma"
 
-import { useRouter } from 'next/router';
-import { revalidateTimeout } from "../../../utils/utils";
-import { useSession, getSession } from "next-auth/client";
-import { Editor } from '@tinymce/tinymce-react';
+import { useRouter } from 'next/router'
+import { revalidateTimeout } from "../../../utils/utils"
+import { useSession, getSession } from "next-auth/client"
+import { Editor } from '@tinymce/tinymce-react'
 
 const useStyles = createUseStyles({
   header: {
@@ -36,7 +37,11 @@ const Post = ({ post, allTags, allCategories }) => {
   const [content, setContent] = useState(post?.content || "");
   const [tagIds, setTagIds] = useState(post?.tags.map(postTag => postTag.tag.id) || []);
   const [categoryId, setCategoryId] = useState(post?.categoryId || 0);
+  const [tags, setTags] = useState(allTags)
+  const [toggleAddTag, setToggleAddTag] = useState(false)
   const [ session, loading ] = useSession()
+
+  const onToggleAddTag = () => setToggleAddTag(!toggleAddTag);
 
   const onDelete = async () => {
     if (loading) return;
@@ -121,6 +126,11 @@ const Post = ({ post, allTags, allCategories }) => {
     isLoggedIn = true
   }
 
+  function onCreateTag(tag) {
+    onToggleAddTag()
+    setTags([...tags, tag]) 
+  }
+
   if (router.isFallback) return <p>Loading</p>
   return (
     <>
@@ -141,10 +151,16 @@ const Post = ({ post, allTags, allCategories }) => {
             <p>Tags</p>
 
             <select multiple={true} value={tagIds} onChange={handleTagChange}>
-              {allTags.map(( tag ) => (
+              {tags.map(( tag ) => (
                 <option value={tag.id} key={tag.id}>{tag.title}</option>
               ))}
             </select>
+
+            <br />
+
+            <button onClick={onToggleAddTag}>+ Add Tag</button>
+
+            {toggleAddTag && <CreateTag callback={onCreateTag} /> }
 
             <p>Category</p>
 
