@@ -1,6 +1,7 @@
 import React from "react"
 import prisma from "../../lib/prisma"
 import { useRouter } from "next/router"
+import Head from "next/head"
 
 import { revalidateTimeout } from "../../utils/utils"
 
@@ -14,6 +15,10 @@ const Category = ({ category }) => {
 
   return (
     <Layout>
+      <Head>
+        <title>Blog - {category.title}</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <h1>Most Recent:</h1>
       <PostList posts={category.posts} />
     </Layout>

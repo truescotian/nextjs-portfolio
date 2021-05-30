@@ -1,4 +1,5 @@
 import React from "react"
+import Head from "next/head"
 
 import prisma from "../../lib/prisma"
 
@@ -14,6 +15,10 @@ const Post = ({ post }) => {
   if (router.isFallback) return <p>Loading</p>
   return (
     <Layout>
+      <Head>
+        <title>{post.title}</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       {post && <Article post={post} />}
     </Layout>
   )

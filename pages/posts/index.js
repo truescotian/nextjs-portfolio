@@ -1,9 +1,10 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
+import Head from "next/head"
+
 import Sidebar from "../../components/ui/article/sidebar/sidebar";
 import PostList from "../../components/ui/list/postList";
 import prisma from "../../lib/prisma";
-import { useRouter } from 'next/router'
 
 const useStyles = createUseStyles({
   header: {
@@ -28,10 +29,13 @@ const useStyles = createUseStyles({
 
 const Posts = (props) => {
   const classes = useStyles()
-  const router = useRouter()
 
   return (
     <>
+      <Head>
+        <title>Blog</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <header className={classes.header}></header>
       <div className={classes.container}>
         <Sidebar />

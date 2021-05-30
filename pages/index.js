@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 import {createUseStyles} from 'react-jss'
-import ListItem from "../components/ui/list/listItem";
-import { homeData } from "../data/home";
-import Contact from "../components/contact";
-import SliderComponent from "../components/sliderComponent";
-import { FaLinkedinIn } from 'react-icons/fa';
+import { FaLinkedinIn } from 'react-icons/fa'
 import { AiFillGithub } from "react-icons/ai"
-import Blog from "../components/blog";
-import prisma from "../lib/prisma";
-import { revalidateTimeout } from "../utils/utils";
-import { CSSTransition } from "react-transition-group";
+import Head from "next/head"
+import { CSSTransition } from "react-transition-group"
+
+import { revalidateTimeout } from "../utils/utils"
+
+import { homeData } from "../data/home"
+
+import ListItem from "../components/ui/list/listItem"
+import SliderComponent from "../components/sliderComponent"
+import Contact from "../components/contact"
+import Blog from "../components/blog"
+import prisma from "../lib/prisma"
 
 const tabletBreak = '@media (max-width: 1250px)';
 const mobileBreak = '@media (max-width: 720px)';
@@ -136,6 +140,11 @@ const Home = (props) => {
 
   return (
     <main className={classes.container}>
+
+      <Head>
+        <title>Home</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
 
       <CSSTransition
         in={!show}

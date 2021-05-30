@@ -66,7 +66,7 @@ const PostList = ({ posts }) => {
               <a>{f.title}</a>
             </Link>
           </h1>
-            {f.tags.length > 0 &&
+            {f.tags?.length > 0 &&
             <div className={classes.tags}>
               <span className={classes.tagsTitle}>Tags: </span>
               {f.tags.map(({ tag }, index) => (
