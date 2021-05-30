@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { createUseStyles } from "react-jss"
+import prisma from "../../../lib/prisma"
 
 import Sidebar from "../../../components/ui/article/sidebar/sidebar"
 import Section from "../../../components/ui/article/sidebar/section"
 import CreateTag from "../../../components/ui/tag/create"
-import prisma from "../../../lib/prisma"
+import CreateCategory from "../../../components/ui/category/create"
 
 import { useRouter } from 'next/router'
 import { revalidateTimeout } from "../../../utils/utils"
@@ -38,10 +39,14 @@ const Post = ({ post, allTags, allCategories }) => {
   const [tagIds, setTagIds] = useState(post?.tags.map(postTag => postTag.tag.id) || []);
   const [categoryId, setCategoryId] = useState(post?.categoryId || 0);
   const [tags, setTags] = useState(allTags)
+  const [categories, setCategories] = useState(allCategories)
   const [toggleAddTag, setToggleAddTag] = useState(false)
-  const [ session, loading ] = useSession()
+  const [toggleAddCategory, setToggleAddCategory] = useState(false)
+  const [session, loading] = useSession()
 
   const onToggleAddTag = () => setToggleAddTag(!toggleAddTag);
+
+  const onToggleAddCategory = () => setToggleAddCategory(!toggleAddCategory);
 
   const onDelete = async () => {
     if (loading) return;
@@ -131,13 +136,18 @@ const Post = ({ post, allTags, allCategories }) => {
     setTags([...tags, tag]) 
   }
 
+  function onCreateCategory(category) {
+    onToggleAddCategory()
+    setCategories([...categories, category])
+  }
+
   if (router.isFallback) return <p>Loading</p>
   return (
     <>
       <header className={classes.header}></header>
       <div className={classes.container}>
         <Sidebar>
-          {allCategories.map(c => <Section key={c.id} category={c} /> )}
+          {categories.map(c => <Section key={c.id} category={c} /> )}
         </Sidebar>
         <div>
             <input type="button" className={classes.delete} onClick={onDelete} value={`${loading ? "Deleting..." : "Delete"}`} />
@@ -166,10 +176,16 @@ const Post = ({ post, allTags, allCategories }) => {
 
             <select value={categoryId} onChange={e => setCategoryId(parseInt(e.target.value, 10))}>
               <option value="Select" disabled={true}>Select</option>
-              {allCategories.map(( category ) => (
+              {categories.map(( category ) => (
                 <option value={category.id} key={category.id}>{category.title}</option>
               ))}
             </select>
+
+            <br />
+
+            <button onClick={onToggleAddCategory}>+ Add Category</button>
+
+            {toggleAddCategory && <CreateCategory callback={onCreateCategory} /> }
 
             <div style={{ color: "black !important" }} dangerouslySetInnerHTML={createMarkup()} />
 

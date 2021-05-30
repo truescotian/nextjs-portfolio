@@ -3,7 +3,7 @@ import React, { useState } from "react"
 import { createUseStyles } from "react-jss"
 
 const useStyles = createUseStyles({
-  createTag: {
+  container: {
     "& button": {
       color: "blue",
       background: "none",
@@ -13,14 +13,14 @@ const useStyles = createUseStyles({
   }
 })
 
-const CreateTag = ({ callback }) => {
+const CreateCategory = ({ callback }) => {
   const [value, setValue] = useState("")
   const classes = useStyles()
 
   const onSubmit = async () => {
     try {
       const body = { title: value }
-      const res = await fetch(`http://localhost:3000/api/tags/create`, {
+      const res = await fetch(`http://localhost:3000/api/categories/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -34,14 +34,14 @@ const CreateTag = ({ callback }) => {
     }
   }
 
-  const onChange = e => setTagValue(e.target.value)
+  const onChange = e => setValue(e.target.value)
 
   return (
-    <div className={classes.createTag}>
-      <input type="text" onChange={onChange} value={value} name="tag" />
+    <div className={classes.container}>
+      <input type="text" onChange={onChange} value={value} name="category" />
       <button onClick={onSubmit}>Save</button>
     </div>
   )
 }
 
-export default CreateTag
+export default CreateCategory

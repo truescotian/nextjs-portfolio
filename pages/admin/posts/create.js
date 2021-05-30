@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import prisma from "../../../lib/prisma"
 
 import CreateTag from "../../../components/ui/tag/create"
+import CreateCategory from "../../../components/ui/category/create"
 
 const Create = ({ allTags, allCategories }) => {
   const [title, setTitle] = useState("")
@@ -12,12 +13,10 @@ const Create = ({ allTags, allCategories }) => {
   const [tagIds, setTagIds] = useState([])
   const [categoryId, setCategoryId] = useState("Select")
   const [toggleAddTag, setToggleAddTag] = useState(false)
-  const [categoryValue, setCategoryValue] = useState("")
   const [tags, setTags] = useState(allTags)
   const [categories, setCategories] = useState(allCategories)
   const [toggleAddCategory, setToggleAddCategory] = useState(false)
   const router = useRouter()
-  const classes = useStyles()
   
   const handleContent = (content, editor) => setContent(content);
 
@@ -28,26 +27,6 @@ const Create = ({ allTags, allCategories }) => {
   const onToggleAddTag = () => setToggleAddTag(!toggleAddTag);
 
   const onToggleAddCategory = () => setToggleAddCategory(!toggleAddCategory);
-
-  const onCreateCategory = async () => {
-    try {
-      const body = {
-        title: categoryValue
-      }
-      const res = await fetch(`http://localhost:3000/api/categories/create`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
-      const data = await res.json()
-      setCategoryValue("")
-      onToggleAddCategory();
-      setCategories([...categories, data])
-      console.debug("Created")
-    } catch (error) {
-      console.error(error)
-    }
-  }
 
   const handleTagChange = e => {
     const id = parseInt(e.target.value, 10);
@@ -100,11 +79,14 @@ const Create = ({ allTags, allCategories }) => {
     }
   }
 
-  const onChangeCategory = e => setCategoryValue(e.target.value)
-
   function onCreateTag(tag) {
     onToggleAddTag()
     setTags([...tags, tag]) 
+  }
+
+  function onCreateCategory(category) {
+    onToggleAddCategory()
+    setCategories([...categories, category])
   }
 
   return (
@@ -142,12 +124,7 @@ const Create = ({ allTags, allCategories }) => {
 
       <button onClick={onToggleAddCategory}>+ Add Category</button>
 
-      {toggleAddCategory &&
-        <div className={classes.createTag}>
-          <input type="text" onChange={onChangeCategory} value={categoryValue} name="category" />
-          <button onClick={onCreateCategory}>Save</button>
-        </div>
-      }
+      {toggleAddCategory && <CreateCategory callback={onCreateCategory} /> }
 
       <div style={{ color: "black !important" }} dangerouslySetInnerHTML={createMarkup()} />
 
