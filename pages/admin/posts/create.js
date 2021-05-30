@@ -3,7 +3,7 @@ import { Editor } from '@tinymce/tinymce-react'
 import { useRouter } from 'next/router'
 import prisma from "../../../lib/prisma"
 
-import CreateTag from "../../ui/tag/create"
+import CreateTag from "../../../components/ui/tag/create"
 
 const Create = ({ allTags, allCategories }) => {
   const [title, setTitle] = useState("")
