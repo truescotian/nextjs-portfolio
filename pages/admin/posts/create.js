@@ -1,20 +1,84 @@
-import React, { useState } from 'react';
-import { Editor } from '@tinymce/tinymce-react';
+import React, { useState } from 'react'
+import { Editor } from '@tinymce/tinymce-react'
 import { useRouter } from 'next/router'
-import prisma from "../../../lib/prisma";
+import prisma from "../../../lib/prisma"
+
+import { createUseStyles } from "react-jss";
+
+const useStyles = createUseStyles({
+  createTag: {
+    "& button": {
+      color: "blue",
+      background: "none",
+      border: "none",
+      cursor: "pointer"
+    }
+  }
+})
 
 const Create = ({ allTags, allCategories }) => {
-  const [title, setTitle] = useState("");
-  const [subTitle, setSubTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [tagIds, setTagIds] = useState([]);
-  const [categoryId, setCategoryId] = useState("Select");
-  const router = useRouter();
+  const [title, setTitle] = useState("")
+  const [subTitle, setSubTitle] = useState("")
+  const [content, setContent] = useState("")
+  const [tagIds, setTagIds] = useState([])
+  const [categoryId, setCategoryId] = useState("Select")
+  const [toggleAddTag, setToggleAddTag] = useState(false)
+  const [tagValue, setTagValue] = useState("")
+  const [categoryValue, setCategoryValue] = useState("")
+  const [tags, setTags] = useState(allTags)
+  const [categories, setCategories] = useState(allCategories)
+  const [toggleAddCategory, setToggleAddCategory] = useState(false)
+  const router = useRouter()
+  const classes = useStyles()
   
   const handleContent = (content, editor) => setContent(content);
 
   function createMarkup () {
     return { __html: content }
+  }
+
+  const onToggleAddTag = () => setToggleAddTag(!toggleAddTag);
+
+  const onToggleAddCategory = () => setToggleAddCategory(!toggleAddCategory);
+
+  const onCreateTag = async () => {
+    try {
+      const body = {
+        title: tagValue
+      }
+      const res = await fetch(`http://localhost:3000/api/tags/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      const data = await res.json()
+      setTagValue("")
+      toggleAddTag()
+      setTags([...tags, data])
+      console.debug("Created")
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const onCreateCategory = async () => {
+    try {
+      const body = {
+        title: categoryValue
+      }
+      const res = await fetch(`http://localhost:3000/api/categories/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      const data = await res.json()
+      setCategoryValue("")
+      onToggleAddCategory();
+      setCategories([...categories, data])
+      console.debug("Created")
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleTagChange = e => {
@@ -68,6 +132,10 @@ const Create = ({ allTags, allCategories }) => {
     }
   }
 
+  const onChangeTag = e => setTagValue(e.target.value)
+
+  const onChangeCategory = e => setCategoryValue(e.target.value)
+
   return (
     <>
       <p>Title</p>
@@ -79,19 +147,41 @@ const Create = ({ allTags, allCategories }) => {
       <p>Tags</p>
 
       <select multiple={true} value={tagIds} onChange={handleTagChange}>
-        {allTags.map(( tag ) => (
+        {tags.map(( tag ) => (
           <option value={tag.id} key={tag.id}>{tag.title}</option>
         ))}
       </select>
+
+      <br />
+
+      <button onClick={onToggleAddTag}>+ Add Tag</button>
+
+      {toggleAddTag &&
+        <div className={classes.createTag}>
+          <input type="text" onChange={onChangeTag} value={tagValue} name="tag" />
+          <button onClick={onCreateTag}>Save</button>
+        </div>
+      }
 
       <p>Category</p>
 
       <select value={categoryId} onChange={e => setCategoryId(parseInt(e.target.value, 10))}>
         <option value="Select" disabled={true}>Select</option>
-        {allCategories.map(( category ) => (
+        {categories.map(( category ) => (
           <option value={category.id} key={category.id}>{category.title}</option>
         ))}
       </select>
+
+      <br />
+
+      <button onClick={onToggleAddCategory}>+ Add Category</button>
+
+      {toggleAddCategory &&
+        <div className={classes.createTag}>
+          <input type="text" onChange={onChangeCategory} value={categoryValue} name="category" />
+          <button onClick={onCreateCategory}>Save</button>
+        </div>
+      }
 
       <div style={{ color: "black !important" }} dangerouslySetInnerHTML={createMarkup()} />
 

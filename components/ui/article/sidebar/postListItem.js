@@ -36,7 +36,10 @@ const useStyles = createUseStyles({
 const PostListItem = ({ post }) => {
   const classes = useStyles();
   const router = useRouter()
-  const active = post.id === parseInt(router.query.id, 10) ? true : false
+  let active = false
+  if (router.route.indexOf("posts") > -1) {
+    active = post.id === parseInt(router.query.id, 10) ? true : false
+  }
 
   return (
     <Link href="/posts/[id]" as={`/posts/${post.id}`}>

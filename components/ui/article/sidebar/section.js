@@ -40,8 +40,11 @@ const useStyles = createUseStyles({
 const Section = ({ category }) => {
   const classes = useStyles()
   const router = useRouter()
-  const { title, posts, id } = category;
-  const active = id === parseInt(router.query.id, 10) ? true : false
+  const { title, posts, id } = category
+  let active = false
+  if (router.route.indexOf("categories") > -1) {
+    active = id === parseInt(router.query.id, 10) ? true : false
+  }
   return (
     <div className={classes.container}>
       <Link href="/categories/[id]" as={`/categories/${category.id}`}>
