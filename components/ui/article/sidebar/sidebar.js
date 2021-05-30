@@ -14,18 +14,16 @@ const useStyles = createUseStyles({
     alignItems: "flex-end",
     borderRight: "1px solid rgb(230, 236, 241)",
     zIndex: "1",
-    transform: "scaleX(0)",
-    transformOrigin: "left",
-    transition: "transform 250ms ease 0s",
-  },
-  desktopSidebar: {
-    transform: "scaleX(1)"
   },
   mobileSidebar: {
+    transform: "scaleX(0)",
     position: "absolute",
     top: "0px",
     left: "0px",
-    height: "100%"
+    height: "100%",
+    transform: "scaleX(0)",
+    transformOrigin: "left",
+    transition: "transform 250ms ease 0s",
   },
   content: {
     width: "250px",
@@ -84,11 +82,11 @@ const Sidebar = ({ onClick, show, isMobile }) => {
       in={show} 
       timeout={0} 
       classNames={{ 
-        enterActive: classes.enterActive,
-        enterDone: classes.enterDone,
-        exitActive: classes.exitActive
+        enterActive: isMobile ? classes.enterActive : null,
+        enterDone: isMobile ? classes.enterDone : null,
+        exitActive: isMobile ? classes.exitActive : null
       }}>
-        <aside className={`${classes.sidebar} ${isMobile ? classes.mobileSidebar : classes.desktopSidebar}`}>
+        <aside className={`${classes.sidebar} ${isMobile && classes.mobileSidebar}`}>
           <div className={classes.content}>
             <div className={classes.controls}>
               {isMobile && 

@@ -5,6 +5,8 @@ import prisma from "../../../lib/prisma"
 
 import CreateTag from "../../../components/ui/tag/create"
 import CreateCategory from "../../../components/ui/category/create"
+import Article from "../../../components/ui/article/article"
+import { useSession, getSession } from "next-auth/client"
 
 const Create = ({ allTags, allCategories }) => {
   const [title, setTitle] = useState("")
@@ -17,12 +19,9 @@ const Create = ({ allTags, allCategories }) => {
   const [categories, setCategories] = useState(allCategories)
   const [toggleAddCategory, setToggleAddCategory] = useState(false)
   const router = useRouter()
+  const [session, loading] = useSession()
   
   const handleContent = (content, editor) => setContent(content);
-
-  function createMarkup () {
-    return { __html: content }
-  }
 
   const onToggleAddTag = () => setToggleAddTag(!toggleAddTag);
 
@@ -89,6 +88,16 @@ const Create = ({ allTags, allCategories }) => {
     setCategories([...categories, category])
   }
 
+  let isLoggedIn = false
+
+  if (typeof window !== 'undefined' && loading) return null
+
+  if (session) {
+    isLoggedIn = true
+  }
+
+  if (!isLoggedIn) return "Unauthorized"
+
   return (
     <>
       <p>Title</p>
@@ -126,7 +135,11 @@ const Create = ({ allTags, allCategories }) => {
 
       {toggleAddCategory && <CreateCategory callback={onCreateCategory} /> }
 
-      <div style={{ color: "black !important" }} dangerouslySetInnerHTML={createMarkup()} />
+      <Article post={{
+        content,
+        title,
+        subTitle
+      }} />
 
       <Editor
         value={content}
@@ -138,10 +151,10 @@ const Create = ({ allTags, allCategories }) => {
           plugins: [
             'advlist autolink lists link image charmap print preview anchor',
             'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code help wordcount'
+            'insertdatetime media table paste code help wordcount textcolor'
           ],
           toolbar:
-            'undo redo | formatselect | bold italic backcolor | \
+            'undo redo | formatselect | bold italic forecolor backcolor | \
             alignleft aligncenter alignright alignjustify | \
             bullist numlist outdent indent | removeformat | help'
         }}
@@ -153,10 +166,12 @@ const Create = ({ allTags, allCategories }) => {
   );
 }
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps(context) {
   const tags = await prisma.tag.findMany({})
   const categories = await prisma.category.findMany({})
-  return { props: { allTags: tags, allCategories: categories } }
+  const session = await getSession(context)
+
+  return { props: { allTags: tags, allCategories: categories, session } }
 }
 
 export default Create;

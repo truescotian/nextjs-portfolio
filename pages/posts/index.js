@@ -25,6 +25,16 @@ const useStyles = createUseStyles({
   articlesContainer: {
     padding: "0px 88px"
   },
+  mostRecent: {
+    display: "flex",
+    flexFlow:"row nowrap",
+    padding: "20px 0px",
+    fontSize: "32px",
+    fontWeight: "500",
+    letterSpacing: "normal",
+    margin: "26.56px 0px",
+    padding: "20px 0px"
+  }
 })
 
 const Posts = (props) => {
@@ -40,7 +50,7 @@ const Posts = (props) => {
       <div className={classes.container}>
         <Sidebar />
         <div className={classes.articlesContainer}>
-          <h1 className={classes.mostRecent}>Most Recent:</h1>
+          <h1 className={classes.mostRecent}>Most Recent</h1>
           <PostList posts={props.posts} />
         </div>
       </div>

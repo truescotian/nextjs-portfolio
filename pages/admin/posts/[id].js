@@ -9,6 +9,7 @@ import CreateCategory from "../../../components/ui/category/create"
 
 import { useRouter } from 'next/router'
 import { revalidateTimeout } from "../../../utils/utils"
+import Article from "../../../components/ui/article/article"
 import { useSession, getSession } from "next-auth/client"
 import { Editor } from '@tinymce/tinymce-react'
 
@@ -38,8 +39,8 @@ const Post = ({ post, allTags, allCategories }) => {
   const [content, setContent] = useState(post?.content || "");
   const [tagIds, setTagIds] = useState(post?.tags.map(postTag => postTag.tag.id) || []);
   const [categoryId, setCategoryId] = useState(post?.categoryId || 0);
-  const [tags, setTags] = useState(allTags)
-  const [categories, setCategories] = useState(allCategories)
+  const [tags, setTags] = useState(allTags || [])
+  const [categories, setCategories] = useState(allCategories || [])
   const [toggleAddTag, setToggleAddTag] = useState(false)
   const [toggleAddCategory, setToggleAddCategory] = useState(false)
   const [session, loading] = useSession()
@@ -86,10 +87,6 @@ const Post = ({ post, allTags, allCategories }) => {
     }
   }
 
-  function createMarkup () {
-    return { __html: content }
-  }
-
   const handleContent = (content, editor) => setContent(content);
 
   const onSubmit = async e => {
@@ -130,6 +127,10 @@ const Post = ({ post, allTags, allCategories }) => {
   if (session) {
     isLoggedIn = true
   }
+
+  if (!isLoggedIn) return "Unauthorized"
+
+  if (!post) return <Error />
 
   function onCreateTag(tag) {
     onToggleAddTag()
@@ -187,8 +188,11 @@ const Post = ({ post, allTags, allCategories }) => {
 
             {toggleAddCategory && <CreateCategory callback={onCreateCategory} /> }
 
-            <div style={{ color: "black !important" }} dangerouslySetInnerHTML={createMarkup()} />
-
+            <Article post={{
+              content,
+              title,
+              subTitle
+            }} />
             <Editor
               value={content}
               apiKey='9c25oo520sw89ieq80brjufk62corkqblol4420sn808a1i0'
@@ -199,10 +203,10 @@ const Post = ({ post, allTags, allCategories }) => {
                 plugins: [
                   'advlist autolink lists link image charmap print preview anchor',
                   'searchreplace visualblocks code fullscreen',
-                  'insertdatetime media table paste code help wordcount'
+                  'insertdatetime media table paste code help wordcount textcolor'
                 ],
                 toolbar:
-                  'undo redo | formatselect | bold italic backcolor | \
+                  'undo redo | formatselect | bold italic forecolor backcolor | \
                   alignleft aligncenter alignright alignjustify | \
                   bullist numlist outdent indent | removeformat | help'
               }}
@@ -218,13 +222,12 @@ const Post = ({ post, allTags, allCategories }) => {
 
 export async function getStaticPaths() {
   const posts = await prisma.post.findMany({
-    select: { id: true}
+    select: { id: true }
   })
 
   const paths = posts.map((post) => ({
     params: { id: post.id.toString() }
   }))
-
 
   return { paths, fallback: true }
 }

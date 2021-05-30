@@ -1,5 +1,6 @@
 import React from "react"
 import Head from "next/head"
+import Error from "next/error"
 
 import prisma from "../../lib/prisma"
 
@@ -13,6 +14,9 @@ const Post = ({ post }) => {
   const router = useRouter();
 
   if (router.isFallback) return <p>Loading</p>
+
+  if (!post) return <Error />
+  
   return (
     <Layout>
       <Head>
@@ -26,7 +30,7 @@ const Post = ({ post }) => {
 
 export async function getStaticPaths() {
   const posts = await prisma.post.findMany({
-    select: { id: true}
+    select: { id: true }
   })
 
   const paths = posts.map((post) => ({

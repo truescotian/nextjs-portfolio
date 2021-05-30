@@ -4,12 +4,19 @@ import { createUseStyles } from "react-jss";
 const useStyles = createUseStyles({
   article: {
     justifySelf: "stretch",
-    padding: "0px 88px",
+    padding: "0px",
     fontFamily: "Moderat",
     letterSpacing:"normal",
+    "& p": {
+      fontSize: "1em",
+      fontWeight: "400",
+      lineHeight: "26px",
+      color: "rgb(59, 69, 78)"
+    }
   },
   h1: {
     display: "flex",
+    color: "rgb(36, 42, 49)",
     flexFlow:"row nowrap",
     padding: "20px 0px",
     fontSize: "32px",
@@ -25,7 +32,7 @@ const useStyles = createUseStyles({
   },
   delete: {
     marginLeft: "20px",
-  },
+  }
 })
 
 const Article = ({ post }) => {
