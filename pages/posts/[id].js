@@ -1,43 +1,21 @@
-import React from "react";
-import { createUseStyles } from "react-jss";
-import Article from "../../components/ui/article/article";
-import Sidebar from "../../components/ui/article/sidebar/sidebar";
-import prisma from "../../lib/prisma";
+import React from "react"
 
-import { useRouter } from 'next/router';
-import { revalidateTimeout } from "../../utils/utils";
+import prisma from "../../lib/prisma"
 
-const useStyles = createUseStyles({
-  header: {
-    height: "80px",
-    width: "100%",
-    backgroundColor: "#fff",
-    borderBottom: "1px solid rgb(212, 218, 223)",
-    boxShadow: "rgba(116, 129, 141, 0.1) 0px 3px 8px 0px",
-    boxSizing: "border-box"
-  },
-  container: {
-    height: "calc(100% - 80px)",
-    display: "grid",
-    gridTemplateRows: "1fr",
-    gridTemplateColumns: "1fr 3fr 1fr",
-    color: "#000"
-  }
-})
+import { useRouter } from 'next/router'
+import { revalidateTimeout } from "../../utils/utils"
+
+import Article from "../../components/ui/article/article"
+import Layout from "../../components/ui/blog/layout"
 
 const Post = ({ post }) => {
-  const classes = useStyles();
   const router = useRouter();
 
   if (router.isFallback) return <p>Loading</p>
   return (
-    <>
-      <header className={classes.header}></header>
-      <div className={classes.container}>
-        <Sidebar />
-        {post && <Article post={post} />}
-      </div>
-    </>
+    <Layout>
+      {post && <Article post={post} />}
+    </Layout>
   )
 }
 

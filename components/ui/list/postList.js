@@ -45,12 +45,18 @@ const useStyles = createUseStyles({
     fontWeight: "500",
     letterSpacing: "0.3px",
     fontSize: "16px",
+  },
+  tags: {
+    letterSpacing: "0px"
+  },
+  tagsTitle: {
+    fontWeight: "400"
   }
 })
 
 const PostList = ({ posts }) => {
   const classes = useStyles();
-  
+
   return (
     <>
       {posts.map(f => (
@@ -60,6 +66,14 @@ const PostList = ({ posts }) => {
               <a>{f.title}</a>
             </Link>
           </h1>
+            {f.tags.length > 0 &&
+            <div className={classes.tags}>
+              <span className={classes.tagsTitle}>Tags: </span>
+              {f.tags.map(({ tag }, index) => (
+               <span key={index}>{tag.title} {index === f.tags.length-1 ? "" : ","}</span>
+              ))}
+            </div>
+            }
           <h2 className={classes.h2}>{f.subTitle}</h2>
         </article>
       ) )}
