@@ -28,6 +28,24 @@ const useStyles = createUseStyles({
     gridTemplateRows: "1fr",
     gridTemplateColumns: "1fr 3fr 1fr",
     color: "#000"
+  },
+  form: {
+    width: "80%",
+    margin: "0 auto"
+  },
+  input: {
+    marginTop: "20px",
+    "& label": {
+      color: "#000",
+    }
+  },
+  btn: {
+    border: "0px",
+    padding: "10px 30px",
+    margin: "20px 0px",
+    marginRight: "20px",
+    backgroundColor: "rgb(33, 33, 43)",
+    color: "#fff"
   }
 })
 
@@ -44,15 +62,16 @@ const Post = ({ post, allTags, allCategories }) => {
   const [toggleAddTag, setToggleAddTag] = useState(false)
   const [toggleAddCategory, setToggleAddCategory] = useState(false)
   const [session, loading] = useSession()
+  const [isLoading, setIsLoading] = useState(false);
 
   const onToggleAddTag = () => setToggleAddTag(!toggleAddTag);
 
   const onToggleAddCategory = () => setToggleAddCategory(!toggleAddCategory);
 
   const onDelete = async () => {
-    if (loading) return;
+    if (isLoading) return;
 
-    setLoading(true);
+    setIsLoading(true);
 
     await fetch(`http://localhost:3000/api/posts/${post.id}`, {
       method: 'DELETE',
@@ -62,7 +81,7 @@ const Post = ({ post, allTags, allCategories }) => {
       })
       .catch(err => {
         console.error(err);
-        setLoading(false);
+        setIsLoading(false);
       })
   }
 
@@ -113,6 +132,9 @@ const Post = ({ post, allTags, allCategories }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
+      if (!res.ok) {
+        throw res;
+      }
       const data = await res.json()
       router.push(`http://localhost:3000/posts/${data.id}`)
     } catch (error) {
@@ -128,7 +150,7 @@ const Post = ({ post, allTags, allCategories }) => {
     isLoggedIn = true
   }
 
-  if (!isLoggedIn) return "Unauthorized"
+  if (!isLoggedIn) return <h1 style={{ color: "#000" }}>Unauthorized</h1>;
 
   if (!post) return <Error />
 
@@ -150,71 +172,78 @@ const Post = ({ post, allTags, allCategories }) => {
         <Sidebar>
           {categories.map(c => <Section key={c.id} category={c} /> )}
         </Sidebar>
-        <div>
-            <input type="button" className={classes.delete} onClick={onDelete} value={`${loading ? "Deleting..." : "Delete"}`} />
+        <form className={classes.form}>
 
-            <p>Title</p>
-            <input type="text" onChange={e => setTitle(e.target.value)} value={title} /> <br />
+          <div className={classes.input}>
+            <label htmlFor="title">Title</label><br/>
+            <input required maxlength="300" type="text" id="title" onChange={e => setTitle(e.target.value)} value={title} /> <br />
+          </div>
 
-            <p>Sub Title</p>
-            <input type="text" onChange={e => setSubTitle(e.target.value)} value={subTitle} />
+          <div className={classes.input}>
+            <label htmlFor="subTitle">Sub Title</label><br/>
+            <input required maxlength="300" type="text" id="subTitle" onChange={e => setSubTitle(e.target.value)} value={subTitle} />
+          </div>
 
-            <p>Tags</p>
-
-            <select multiple={true} value={tagIds} onChange={handleTagChange}>
+          <div className={classes.input}>
+            <label htmlFor="tagIds">Tags</label><br/>
+            <select id="tagIds" multiple={true} value={tagIds} onChange={handleTagChange}>
               {tags.map(( tag ) => (
                 <option value={tag.id} key={tag.id}>{tag.title}</option>
               ))}
             </select>
+          </div>
 
-            <br />
+          <br />
 
-            <button onClick={onToggleAddTag}>+ Add Tag</button>
+          <button onClick={onToggleAddTag}>+ Add Tag</button>
 
-            {toggleAddTag && <CreateTag callback={onCreateTag} /> }
+          {toggleAddTag && <CreateTag callback={onCreateTag} /> }
 
-            <p>Category</p>
-
-            <select value={categoryId} onChange={e => setCategoryId(parseInt(e.target.value, 10))}>
+          <div className={classes.input}>
+            <label htmlFor="category">Category</label><br/>
+            <select id="category" value={categoryId} onChange={e => setCategoryId(parseInt(e.target.value, 10))}>
               <option value="Select" disabled={true}>Select</option>
               {categories.map(( category ) => (
                 <option value={category.id} key={category.id}>{category.title}</option>
               ))}
             </select>
+          </div>
 
-            <br />
+          <br />
 
-            <button onClick={onToggleAddCategory}>+ Add Category</button>
+          <button onClick={onToggleAddCategory}>+ Add Category</button>
 
-            {toggleAddCategory && <CreateCategory callback={onCreateCategory} /> }
+          {toggleAddCategory && <CreateCategory callback={onCreateCategory} /> }
 
-            <Article post={{
-              content,
-              title,
-              subTitle
-            }} />
-            <Editor
-              value={content}
-              apiKey='9c25oo520sw89ieq80brjufk62corkqblol4420sn808a1i0'
-              initialValue="<p>This is the initial content of the editor</p>"
-              init={{
-                height: 500,
-                menubar: false,
-                plugins: [
-                  'advlist autolink lists link image charmap print preview anchor',
-                  'searchreplace visualblocks code fullscreen',
-                  'insertdatetime media table paste code help wordcount textcolor'
-                ],
-                toolbar:
-                  'undo redo | formatselect | bold italic forecolor backcolor | \
-                  alignleft aligncenter alignright alignjustify | \
-                  bullist numlist outdent indent | removeformat | help'
-              }}
-              onEditorChange={handleContent}
-            />
+          <Article post={{
+            content,
+            title,
+            subTitle
+          }} />
+          <Editor
+            value={content}
+            apiKey='9c25oo520sw89ieq80brjufk62corkqblol4420sn808a1i0'
+            initialValue="<p>This is the initial content of the editor</p>"
+            init={{
+              height: 500,
+              menubar: false,
+              plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount textcolor'
+              ],
+              toolbar:
+                'undo redo | formatselect | bold italic forecolor backcolor | \
+                alignleft aligncenter alignright alignjustify | \
+                bullist numlist outdent indent | removeformat | help'
+            }}
+            onEditorChange={handleContent}
+          />
 
-            <input type="button" onClick={onSubmit} value="submit" />
-        </div>
+          <input type="button" className={classes.btn} onClick={onDelete} value={`${isLoading ? "Deleting..." : "Delete"}`} />
+          <button className={classes.btn} type="submit">Submit</button>
+
+        </form>
       </div>
     </>
   )

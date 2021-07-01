@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { createUseStyles } from "react-jss";
 import { Editor } from '@tinymce/tinymce-react'
 import { useRouter } from 'next/router'
 import prisma from "../../../lib/prisma"
@@ -6,7 +7,29 @@ import prisma from "../../../lib/prisma"
 import CreateTag from "../../../components/ui/tag/create"
 import CreateCategory from "../../../components/ui/category/create"
 import Article from "../../../components/ui/article/article"
+
 import { useSession, getSession } from "next-auth/client"
+
+const useStyles = createUseStyles({
+  container: {
+    width: "80%",
+    margin: "0 auto"
+  },
+  input: {
+    marginTop: "20px",
+    "& label": {
+      color: "#000",
+    }
+  },
+  btnSubmit: {
+    border: "0px",
+    padding: "10px 30px",
+    margin: "20px 0px",
+    float: "right",
+    backgroundColor: "rgb(33, 33, 43)",
+    color: "#fff"
+  }
+});
 
 const Create = ({ allTags, allCategories }) => {
   const [title, setTitle] = useState("")
@@ -20,6 +43,8 @@ const Create = ({ allTags, allCategories }) => {
   const [toggleAddCategory, setToggleAddCategory] = useState(false)
   const router = useRouter()
   const [session, loading] = useSession()
+  const [isLoading, setIsLoading] = useState(false);
+  const classes = useStyles();
   
   const handleContent = (content, editor) => setContent(content);
 
@@ -49,7 +74,9 @@ const Create = ({ allTags, allCategories }) => {
   }
 
   const onSubmit = async e => {
-    e.preventDefault();
+    e.preventDefault()
+
+    setIsLoading(true)
 
     let selectedTags = [];
     for (let i=0;i<tagIds.length;i++) {
@@ -71,10 +98,14 @@ const Create = ({ allTags, allCategories }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
+      if (!res.ok) {
+        throw res;
+      }
       const data = await res.json()
       router.push(`http://localhost:3000/posts/${data.id}`)
     } catch (error) {
       console.error(error)
+      setIsLoading(false)
     }
   }
 
@@ -96,42 +127,49 @@ const Create = ({ allTags, allCategories }) => {
     isLoggedIn = true
   }
 
-  if (!isLoggedIn) return "Unauthorized"
+  if (!isLoggedIn) return <h1 style={{ color: "#000" }}>Unauthorized</h1>;
 
   return (
-    <>
-      <p>Title</p>
-      <input type="text" onChange={e => setTitle(e.target.value)} value={title} /> <br />
+    <form className={classes.container} onSubmit={onSubmit}>
 
-      <p>Sub Title</p>
-      <input type="text" onChange={e => setSubTitle(e.target.value)} value={subTitle} />
+      <div className={classes.input}>
+        <label htmlFor="title">Title</label><br/>
+        <input required maxlength="300" type="text" id="title" onChange={e => setTitle(e.target.value)} value={title} /> <br />
+      </div>
 
-      <p>Tags</p>
+      <div className={classes.input}>
+        <label htmlFor="subTitle">Sub Title</label><br/>
+        <input required maxlength="300" type="text" id="subTitle" onChange={e => setSubTitle(e.target.value)} value={subTitle} />
+      </div>
 
-      <select multiple={true} value={tagIds} onChange={handleTagChange}>
-        {tags.map(( tag ) => (
-          <option value={tag.id} key={tag.id}>{tag.title}</option>
-        ))}
-      </select>
+      <div className={classes.input}>
+        <label htmlFor="tagIds">Tags</label><br/>
+        <select required id="tagIds" multiple={true} value={tagIds} onChange={handleTagChange}>
+          {tags.map(( tag ) => (
+            <option value={tag.id} key={tag.id}>{tag.title}</option>
+          ))}
+        </select>
+      </div>
 
       <br />
 
-      <button onClick={onToggleAddTag}>+ Add Tag</button>
+      <input type="button" onClick={onToggleAddTag} value="+ Create Tag" />
 
       {toggleAddTag && <CreateTag callback={onCreateTag} /> }
 
-      <p>Category</p>
-
-      <select value={categoryId} onChange={e => setCategoryId(parseInt(e.target.value, 10))}>
-        <option value="Select" disabled={true}>Select</option>
-        {categories.map(( category ) => (
-          <option value={category.id} key={category.id}>{category.title}</option>
-        ))}
-      </select>
+      <div className={classes.input}>
+        <label htmlFor="category">Category</label><br/>
+        <select id="category" value={categoryId} onChange={e => setCategoryId(parseInt(e.target.value, 10))}>
+          <option value="Select" disabled={true}>Select</option>
+          {categories.map(( category ) => (
+            <option value={category.id} key={category.id}>{category.title}</option>
+          ))}
+        </select>
+      </div>
 
       <br />
 
-      <button onClick={onToggleAddCategory}>+ Add Category</button>
+      <input type="button" onClick={onToggleAddCategory} value="+ Create Category" />
 
       {toggleAddCategory && <CreateCategory callback={onCreateCategory} /> }
 
@@ -161,8 +199,8 @@ const Create = ({ allTags, allCategories }) => {
         onEditorChange={handleContent}
       />
 
-      <input type="button" onClick={onSubmit} value="submit" />
-    </>
+      <button className={classes.btnSubmit} type="submit">{isLoading ? "Creating..." : "Submit"}</button>
+    </form>
   );
 }
 

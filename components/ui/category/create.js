@@ -39,7 +39,7 @@ const CreateCategory = ({ callback }) => {
   return (
     <div className={classes.container}>
       <input type="text" onChange={onChange} value={value} name="category" />
-      <button onClick={onSubmit}>Save</button>
+      <input type="button" onClick={onSubmit} value="Save" />
     </div>
   )
 }
