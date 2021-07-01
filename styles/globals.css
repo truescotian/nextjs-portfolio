@@ -103,6 +103,11 @@ body.modal-open {
   height: 100%;
 }
 
+.img-responsive {
+  max-width: 100%;
+  height: auto;
+}
+
 @media all and (max-width: 1050px) {
   .welcomeHeader h1 {
     font-size: 3em;

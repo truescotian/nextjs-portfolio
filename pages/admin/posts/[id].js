@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { createUseStyles } from "react-jss"
 import prisma from "../../../lib/prisma"
 
@@ -7,6 +7,7 @@ import Section from "../../../components/ui/article/sidebar/section"
 import CreateTag from "../../../components/ui/tag/create"
 import CreateCategory from "../../../components/ui/category/create"
 
+import Head from "next/head"
 import { useRouter } from 'next/router'
 import { revalidateTimeout } from "../../../utils/utils"
 import Article from "../../../components/ui/article/article"
@@ -85,6 +86,7 @@ const Post = ({ post, allTags, allCategories }) => {
       })
   }
 
+
   const handleTagChange = e => {
     const id = parseInt(e.target.value, 10);
 
@@ -111,6 +113,10 @@ const Post = ({ post, allTags, allCategories }) => {
   const onSubmit = async e => {
     e.preventDefault();
 
+    if (isLoading) return;
+  
+    setIsLoading(true)
+
     let selectedTags = [];
     for (let i=0;i<tagIds.length;i++) {
       selectedTags = [...selectedTags, tagIds[i]]
@@ -135,11 +141,12 @@ const Post = ({ post, allTags, allCategories }) => {
       if (!res.ok) {
         throw res;
       }
-      const data = await res.json()
-      router.push(`http://localhost:3000/posts/${data.id}`)
+      router.push(`http://localhost:3000/posts/${post.id}`)
     } catch (error) {
       console.error(error)
     }
+
+    setIsLoading(false)
   }
 
   let isLoggedIn = false
@@ -167,21 +174,26 @@ const Post = ({ post, allTags, allCategories }) => {
   if (router.isFallback) return <p>Loading</p>
   return (
     <>
+      <Head>
+        <title>{title}</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+
+      </Head>
       <header className={classes.header}></header>
       <div className={classes.container}>
         <Sidebar>
           {categories.map(c => <Section key={c.id} category={c} /> )}
         </Sidebar>
-        <form className={classes.form}>
+        <form className={classes.form} onSubmit={onSubmit}>
 
           <div className={classes.input}>
             <label htmlFor="title">Title</label><br/>
-            <input required maxlength="300" type="text" id="title" onChange={e => setTitle(e.target.value)} value={title} /> <br />
+            <input required maxLength="300" type="text" id="title" onChange={e => setTitle(e.target.value)} value={title} /> <br />
           </div>
 
           <div className={classes.input}>
             <label htmlFor="subTitle">Sub Title</label><br/>
-            <input required maxlength="300" type="text" id="subTitle" onChange={e => setSubTitle(e.target.value)} value={subTitle} />
+            <input required maxLength="300" type="text" id="subTitle" onChange={e => setSubTitle(e.target.value)} value={subTitle} />
           </div>
 
           <div className={classes.input}>
@@ -230,18 +242,26 @@ const Post = ({ post, allTags, allCategories }) => {
               plugins: [
                 'advlist autolink lists link image charmap print preview anchor',
                 'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table paste code help wordcount textcolor'
+                'insertdatetime media table paste code help wordcount textcolor codesample image'
               ],
               toolbar:
                 'undo redo | formatselect | bold italic forecolor backcolor | \
                 alignleft aligncenter alignright alignjustify | \
-                bullist numlist outdent indent | removeformat | help'
+                bullist numlist outdent indent | removeformat | help | codesample | image',
+                codesample_languages: [
+                  /*take codesample_languages out to see all of the languages*/
+                  { text: 'Go', value: 'go'}
+              ],
+              image_class_list: [
+                {title: 'None', value: ''},
+                {title: 'Responsive', value: 'img-responsive'}
+              ],
             }}
             onEditorChange={handleContent}
           />
 
           <input type="button" className={classes.btn} onClick={onDelete} value={`${isLoading ? "Deleting..." : "Delete"}`} />
-          <button className={classes.btn} type="submit">Submit</button>
+          <button className={classes.btn} type="submit">{isLoading ? "Saving..." : "Save"}</button>
 
         </form>
       </div>

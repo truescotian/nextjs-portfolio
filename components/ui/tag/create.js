@@ -38,7 +38,7 @@ const CreateTag = ({ callback }) => {
 
   return (
     <div className={classes.createTag}>
-      <input required minlength="5" type="text" onChange={onChange} value={value} name="tag" />
+      <input required minLength="5" type="text" onChange={onChange} value={value} name="tag" />
       <input type="button" value="Save" onClick={onSubmit} />
     </div>
   )

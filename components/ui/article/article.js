@@ -1,5 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createUseStyles } from "react-jss";
+
+import prism from "prismjs";
+
+import "prismjs/components/prism-go"
+import "prism-themes/themes/prism-atom-dark.css"
 
 const useStyles = createUseStyles({
   article: {
@@ -41,6 +46,10 @@ const Article = ({ post }) => {
   function createMarkup () {
     return { __html: post.content }
   }
+
+  useEffect(() => {
+    prism.highlightAll();
+  }, [post.content]);
   
   return (
     <article className={classes.article}>

@@ -76,6 +76,8 @@ const Create = ({ allTags, allCategories }) => {
   const onSubmit = async e => {
     e.preventDefault()
 
+    if (isLoading) return;
+
     setIsLoading(true)
 
     let selectedTags = [];
@@ -105,8 +107,9 @@ const Create = ({ allTags, allCategories }) => {
       router.push(`http://localhost:3000/posts/${data.id}`)
     } catch (error) {
       console.error(error)
-      setIsLoading(false)
     }
+
+    setIsLoading(false)
   }
 
   function onCreateTag(tag) {
@@ -134,12 +137,12 @@ const Create = ({ allTags, allCategories }) => {
 
       <div className={classes.input}>
         <label htmlFor="title">Title</label><br/>
-        <input required maxlength="300" type="text" id="title" onChange={e => setTitle(e.target.value)} value={title} /> <br />
+        <input required maxLength="300" type="text" id="title" onChange={e => setTitle(e.target.value)} value={title} /> <br />
       </div>
 
       <div className={classes.input}>
         <label htmlFor="subTitle">Sub Title</label><br/>
-        <input required maxlength="300" type="text" id="subTitle" onChange={e => setSubTitle(e.target.value)} value={subTitle} />
+        <input required maxLength="300" type="text" id="subTitle" onChange={e => setSubTitle(e.target.value)} value={subTitle} />
       </div>
 
       <div className={classes.input}>
@@ -189,12 +192,20 @@ const Create = ({ allTags, allCategories }) => {
           plugins: [
             'advlist autolink lists link image charmap print preview anchor',
             'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code help wordcount textcolor'
+            'insertdatetime media table paste code help wordcount textcolor codesample image'
           ],
           toolbar:
             'undo redo | formatselect | bold italic forecolor backcolor | \
             alignleft aligncenter alignright alignjustify | \
-            bullist numlist outdent indent | removeformat | help'
+            bullist numlist outdent indent | removeformat | help | codesample | image',
+            codesample_languages: [
+              /*take codesample_languages out to see all of the languages*/
+              { text: 'Go', value: 'go'}
+          ],
+          image_class_list: [
+            {title: 'None', value: ''},
+            {title: 'Responsive', value: 'img-responsive'}
+          ],
         }}
         onEditorChange={handleContent}
       />
