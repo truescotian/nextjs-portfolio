@@ -74,11 +74,11 @@ const Post = ({ post, allTags, allCategories }) => {
 
     setIsLoading(true);
 
-    await fetch(`http://localhost:3000/api/posts/${post.id}`, {
+    await fetch(`${window.location.origin}/api/posts/${post.id}`, {
       method: 'DELETE',
     })
       .then(() => {
-        router.push(`http://localhost:3000/posts`)
+        router.push(`${window.location.origin}/posts`)
       })
       .catch(err => {
         console.error(err);
@@ -133,7 +133,7 @@ const Post = ({ post, allTags, allCategories }) => {
         categoryId,
         tags: selectedTags
       }
-      const res = await fetch(`http://localhost:3000/api/posts/${post.id}`, {
+      const res = await fetch(`${window.location.origin}/api/posts/${post.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -141,7 +141,7 @@ const Post = ({ post, allTags, allCategories }) => {
       if (!res.ok) {
         throw res;
       }
-      router.push(`http://localhost:3000/posts/${post.id}`)
+      router.push(`${window.location.origin}/posts/${post.id}`)
     } catch (error) {
       console.error(error)
     }

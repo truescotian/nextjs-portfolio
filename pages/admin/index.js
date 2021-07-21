@@ -18,7 +18,7 @@ const Index = () => {
   }
 
   function onCreatePost() {
-    router.push(`http://localhost:3000/admin/posts/create`);
+    router.push(`${window.location.origin}/admin/posts/create`);
   }
 
   return (

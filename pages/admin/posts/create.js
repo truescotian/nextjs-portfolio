@@ -95,7 +95,7 @@ const Create = ({ allTags, allCategories }) => {
         categoryId,
         tagIds: selectedTags
       }
-      const res = await fetch(`http://localhost:3000/api/posts/create`, {
+      const res = await fetch(`${window.location.origin}/api/posts/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -104,7 +104,7 @@ const Create = ({ allTags, allCategories }) => {
         throw res;
       }
       const data = await res.json()
-      router.push(`http://localhost:3000/posts/${data.id}`)
+      router.push(`${window.location.origin}/posts/${data.id}`)
     } catch (error) {
       console.error(error)
     }

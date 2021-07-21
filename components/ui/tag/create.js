@@ -20,7 +20,7 @@ const CreateTag = ({ callback }) => {
   const onSubmit = async () => {
     try {
       const body = { title: value }
-      const res = await fetch(`http://localhost:3000/api/tags/create`, {
+      const res = await fetch(`${window.location.origin}/api/tags/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
