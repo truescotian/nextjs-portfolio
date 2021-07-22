@@ -146,6 +146,7 @@ export default function Resume() {
               <li>Postgres</li>
               <li>Agile</li>
               <li>Jira</li>
+              <li>Authentication & Authorization</li>
             </ul>
           </>
         </ExperienceLineItem>
@@ -172,8 +173,11 @@ export default function Resume() {
           date="Jan 2017 - May 2018">
           <>
             <p className={classes.description}>
-              Help create curriculum and lecture during labs. Help students throughout the day
-              and guest-lecture on request.
+              Mark assignments, and tests. Help create curriculum and lecture during labs. 
+              Help students throughout the day, guest-lecture, proctor exams. 
+              Lectures and exercises created usually related to database design and 
+              management, web security, OSI model, HTTP protocols, REST, tools for 
+              managing web apps.
             </p>
             <ul>
               <li>Mobile Computing</li>
