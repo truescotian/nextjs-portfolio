@@ -13,6 +13,7 @@ import ListItem from "../components/ui/list/listItem"
 import SliderComponent from "../components/sliderComponent"
 import Contact from "../components/contact"
 import Blog from "../components/blog"
+import Resume from "../components/resume"
 import prisma from "../lib/prisma"
 
 const tabletBreak = '@media (max-width: 1250px)';
@@ -117,7 +118,8 @@ const useStyles = createUseStyles({
 
 const pages = {
   contact: Contact,
-  blog: Blog
+  blog: Blog,
+  resume: Resume
 };
 
 const Icon = ({ classes, href, children }) => {
